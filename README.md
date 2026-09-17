@@ -14,7 +14,9 @@
 Go (Golang) 製のFM音源＋PCM音源合成ドライバです。[Ebitengine](https://ebitengine.org/) の
 [`oto/v3`](https://github.com/ebitengine/oto) を音声出力に使用し、ゲームプロジェクトへライブラリ
 として組み込んで、MML（Music Macro Language）で記述したBGMを非同期に再生することを想定しています。
-
+<p>
+  <a href="https://megaak.com/go-fmml/docs/index.html" targer="_blabk">https://megaak.com/go-fmml/docs/index.html</a>
+</p>
 
 ## 特徴（概要）
 

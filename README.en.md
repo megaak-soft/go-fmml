@@ -15,6 +15,9 @@ An FM + PCM sound synthesis driver written in Go (Golang). It uses
 [Ebitengine](https://ebitengine.org/)'s [`oto/v3`](https://github.com/ebitengine/oto) for audio
 output, and is designed to be embedded as a library in a game project to play BGM written in MML
 (Music Macro Language) asynchronously.
+<p>
+  <a href="https://megaak.com/go-fmml/docs/index.html" targer="_blabk">https://megaak.com/go-fmml/docs/index.html</a>
+</p>
 
 ## Features (overview)
 
