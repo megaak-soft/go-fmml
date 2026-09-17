@@ -48,10 +48,10 @@ fmVoice:
     algorithm: 5
     feedback: 4
     lfo: true
-    lfoDelay: 0.3
-    lfoFade: 0.3
-    lfoDepth: 25
-    lfoHz: 7
+    lfoDelay: 0.4
+    lfoFade: 0.4
+    lfoDepth: 20
+    lfoHz: 6
 
     operators:
       - multiple: 1
