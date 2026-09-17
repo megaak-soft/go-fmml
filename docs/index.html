@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>go-fmml ドキュメント</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#9aa3b2; --accent:#7aa2ff; --accent2:#ffb454;
+    --code-bg:#11141b; --table-head:#1d2129;
+    font-family: -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{line-height:1.8; font-size:15.5px;}
+  .layout{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{
+    width:220px; flex:0 0 220px; padding:28px 16px; position:sticky; top:0; align-self:flex-start;
+    height:100vh; overflow-y:auto; border-right:1px solid var(--border);
+  }
+  nav.side h1{font-size:17px; margin:0 0 4px; color:var(--text);}
+  nav.side .sub{font-size:11.5px; color:var(--muted); margin-bottom:20px;}
+  nav.side a{display:block; color:var(--muted); text-decoration:none; padding:7px 10px; border-radius:6px; font-size:13.5px;}
+  nav.side a:hover{background:var(--panel2); color:var(--text);}
+  nav.side a.current{background:var(--panel2); color:var(--accent); font-weight:600;}
+  main{flex:1; padding:36px 44px 80px; min-width:0;}
+  h1{font-size:28px; margin:0 0 6px;}
+  h2{font-size:20px; margin:40px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  h3{font-size:16px; margin:26px 0 10px; color:var(--accent);}
+  p{color:var(--text);}
+  .lead{color:var(--muted); font-size:16px;}
+  code{background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.92em; font-family: Consolas, "SF Mono", Menlo, monospace;}
+  pre{background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:16px 18px; overflow-x:auto; font-size:13px; line-height:1.6;}
+  pre code{background:none; border:none; padding:0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 22px; font-size:13.8px;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--table-head); color:var(--accent); font-weight:600;}
+  tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
+  .card-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; margin:18px 0 8px;}
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 18px;}
+  .card b{color:var(--accent);}
+  .card p{margin:6px 0 0; color:var(--muted); font-size:13.5px;}
+  .note{background:var(--panel2); border-left:3px solid var(--accent2); padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  .badge{display:inline-block; font-size:11px; padding:2px 8px; border-radius:20px; background:var(--panel2); color:var(--accent); border:1px solid var(--border); margin-left:6px;}
+  a{color:var(--accent);}
+  footer{max-width:1180px; margin:0 auto; padding:0 44px 60px 264px;}
+  footer hr{border:none; border-top:1px solid var(--border); margin:40px 0 18px;}
+  footer p{color:var(--muted); font-size:12.5px;}
+  @media (max-width:860px){
+    .layout{flex-direction:column;}
+    nav.side{position:relative; width:auto; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:24px;}
+    footer{padding:0 24px 40px;}
+  }
+  .langswitch{position:fixed; top:16px; right:24px; z-index:50; display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px; font-size:12px; box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .langswitch a, .langswitch span{padding:4px 12px; border-radius:16px; text-decoration:none; color:var(--muted); font-weight:500;}
+  .langswitch a:hover{background:var(--panel2); color:var(--text);}
+  .langswitch span.current{background:var(--accent); color:#0f1115; font-weight:700;}
+</style>
+</head>
+<body>
+<div class="langswitch"><span class="current">日本語</span><a href="en/index.html">English</a></div>
+<div class="layout">
+<nav class="side">
+  <h1><img src="img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+  <div class="sub">FM/PCM音源ドライバ ドキュメント</div>
+  <a class="current" href="index.html">概要・はじめに</a>
+  <a href="api.html">公開メソッド仕様</a>
+  <a href="fmvoice.html">FM音色パラメータ仕様</a>
+  <a href="pcmvoice.html">PCM音色パラメータ仕様</a>
+  <a href="mmlformat.html">MMLファイル構成仕様</a>
+  <a href="mmlcommands.html">MMLコマンド仕様</a>
+  <a href="smftool.html">SMF変換ツール</a>
+  <a href="license.html">ライセンス</a>
+</nav>
+<main>
+
+<h1><img src="img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+<p class="lead">Go (Golang) 製、ゲームBGM組み込み向けの非同期FM音源＋PCM音源合成ドライバです。</p>
+<P><a href="https://github.com/megaak-soft/go-fmml" target="_blank">https://github.com/megaak-soft/go-fmml</a></P>
+
+<h2>これは何か</h2>
+<p>
+go-fmml は、YAMAHA系FM音源チップの設計思想を参考にしたオリジナル実装のFMシンセシスコアと、WAVサンプ
+ルを鳴らすPCM音源コアを組み合わせ、独自のMML（Music Macro Language）テキストでシーケンスデータを記
+述・再生できる、Goのライブラリです。ゲームプロジェクトに直接組み込んで、BGMを
+<b>非同期</b>（呼び出し元をブロックしない）に再生することを主目的として設計されています。
+</p>
+<p>
+音源合成やチップ仕様のエミュレーションではなく、「FM音源らしい音作りができる、MMLでBGMを書ける、
+ゲームに組み込みやすい」ことを重視したオリジナル実装です。特定のハードウェアやエミュレータ、既存
+OSSのレジスタ仕様・実装を移植したものではありません。
+</p>
+<p>
+本プロジェクトは <a href="https://www.anthropic.com/claude-code" target="_blank" rel="noopener">Claude
+Code</a> を用い、仕様書（<code>CLAUDE.md</code>）にエンジン仕様・MML仕様・フェーズ計画を詳細に記述
+した上でAIに実装させる、いわゆる「仕様書駆動開発（Spec-Driven Development）」の手法で構築されてい
+ます。
+</p>
+<p>
+AIによるコード生成では、学習データに含まれるOSSコードの影響でGPL等コピーレフトライセンスのコード
+パターンが意図せず混入する「ライセンス汚染」のリスクが指摘されています。go-fmml では開発仕様書に
+ライセンス汚染排除のための実装ルールを明記し、コード生成のたびにAI自身へルール遵守をチェックさせ
+る運用で開発しています。go-fmml のソースコード自体は<b>MITライセンス</b>で提供されており、商用・
+配布・ゲームへの組み込みを含め自由に利用できます。詳細は<a href="license.html">ライセンスページ</a>
+を参照してください。
+</p>
+
+<h2>できること（機能一覧）</h2>
+<div class="card-grid">
+  <div class="card"><b>FM音源合成</b><p>4オペレータ×8アルゴリズム、基本波形8種類(W1〜W8)、LFO
+  （ビブラート）、最大16パート、1パートあたり最大16音ポリフォニック。</p></div>
+  <div class="card"><b>PCM音源</b><p>WAVサンプル再生。ドラムキット向けの oneShot（最大16サンプル
+  ×パート）と、ピッチ可変の long（ループ・エンベロープ・LFO対応）の2タイプ、最大16パート。</p></div>
+  <div class="card"><b>MMLシーケンサ</b><p>独自MML仕様でFM/PCM合計32パートを時間軸ズレなく同期再
+  生。4/4拍子1小節を192分割した粒度でタイミング管理。</p></div>
+  <div class="card"><b>マスターリバーブ</b><p>Schroeder型（軽量）/FDN型（高品質）から選択できるス
+  テレオリバーブ。パート単位・oneShotノート単位でセンドレベルを指定可能。</p></div>
+  <div class="card"><b>MML表現力</b><p>ポルタメント、ピッチベンドアップ/ダウン、パートミュート/ソ
+  ロ、トランスポーズ、コンダクターパート（テンポ変化・ループジャンプ地点）。</p></div>
+  <div class="card"><b>再生制御</b><p>Play/Pause/Resume/Stop/Rewind/SkipPlay、マスターボリューム
+  （即時・スムーズ変更）、フェードイン/フェードアウト/フェードイン&アウト再生。</p></div>
+  <div class="card"><b>柔軟な入力</b><p>ファイル読み込み（絶対パス／<code>embed.FS</code>）に加え、
+  Go文字列リテラルとしてMML／FM音色／PCM音色データを直接渡すことも可能。</p></div>
+  <div class="card"><b>SMF変換ツール</b><p>付属ツール <code>Smf2GoFMML</code> でスタンダードMIDI
+  ファイル(Format1)を読み込み、go-fmmlのMML仕様へ変換して出力。</p></div>
+</div>
+
+<h2>動作環境</h2>
+<table>
+<tr><th>項目</th><th>要件</th></tr>
+<tr><td>Go</td><td>1.24.0 以上（依存する <code>ebitengine/oto/v3</code> が要求する最低バージョンに
+準拠）</td></tr>
+<tr><td>対応OS</td><td>Windows / macOS / Linux / Android / iOS / WebAssembly（音声出力に使用する
+<code>ebitengine/oto/v3</code> の対応プラットフォームに準拠）</td></tr>
+</table>
+
+<h2>デモを試す</h2>
+<p>
+実際に音を鳴らして動作を確認できる最小サンプルを <code>cmd/mmldemo</code> に同梱しています。
+FM音色ファイル・MMLファイルの読み込みから再生までの一連の流れを実装した例です。
+</p>
+<pre><code>cd cmd/mmldemo
+go run .</code></pre>
+<p class="note">サンプルの音色（<code>sample_fm.yaml</code>）・MML（<code>sample1.mml</code>）は
+今後差し替え予定です。</p>
+
+<h2>パフォーマンス特性</h2>
+<p>音声レンダリングはサンプル単位のソフトウェア合成です。目安として把握しておくべき点は以下の通り
+です。</p>
+<ul>
+  <li>1パートあたり最大16音、FM16パート＋PCM16パートの全32パートを同時稼働させた場合が理論上の最
+  大負荷です。実際の楽曲では全パート・全音が常時鳴り続けることは稀なため、通常の使用（数〜十数パー
+  ト、パートごと数音のポリフォニック）ではオーディオコールバックのCPU負荷は小さく収まります。</li>
+  <li>リバーブは全体で1系統のみインスタンス化されます（マスターに1個）。Schroeder型はディレイ
+  ラインとオールパスフィルタの少数構成、FDN型はフィードバック・ディレイ・ネットワークで、Schroeder
+  型よりやや計算コストが高くなります。リバーブ未使用時（<code>reverb: false</code>）は完全にバイパ
+  スされ、処理コストはかかりません。リバーブ内部演算は軽量化のため<code>float32</code>を使用してい
+  ます。</li>
+  <li>PCM波形はメモリ上にデコード済みの<code>float32</code>サンプル列として保持されます。同一WAV
+  ファイルは重複読み込みされず、一度読み込んだ波形データはキャッシュされ使い回されます
+  （<code>LoadPCMVoiceFile</code> / <code>LoadPCMVoiceFileFS</code> / <code>SetPCMVoiceData</code>
+  共通）。</li>
+  <li>メモリ確保は主に音色登録・シーケンス読み込み時（曲の切り替わり時）に発生し、発音処理そのもの
+  はホットパスでの新規アロケーションを避ける設計です。</li>
+</ul>
+
+<h2>ebitengine/oto/v3 との関係</h2>
+<p>
+音声出力には <a href="https://github.com/ebitengine/oto" target="_blank" rel="noopener">Ebitengine
+プロジェクトの <code>github.com/ebitengine/oto/v3</code></a> を使用しています。go-fmml の
+<code>fmcore.NewEngine</code> は内部で oto のオーディオコンテキストを初期化し、生成した
+<code>*fmcore.Engine</code> 自体が oto の <code>oto.Player</code> が要求する
+<code>io.Reader</code>（<code>Read([]byte) (int, error)</code>）を実装しているため、そのまま
+oto のプレイヤーにセットして再生できます。
+</p>
+<p>
+すでに自前で oto のコンテキストを保持しているアプリ（例えば同時にEbitengineの他の音声再生も行って
+いる場合）向けに、oto コンテキストを自前管理し go-fmml 側では音声デバイスを開かない
+<code>fmcore.NewEngineWithoutOutput</code> も用意しています。コード例は次項を参照してください。
+</p>
+<div class="note">
+<b>サードパーティライブラリのライセンス表記</b><br>
+go-fmml は内部でいくつかのOSSライブラリに依存しています（間接依存を含む）。各ライブラリの著作権は
+それぞれの著作者に帰属し、go-fmml のMITライセンスとは独立してそれぞれのライセンス条件が適用され
+ます。依存ライブラリの一覧とgo-fmml自体の利用条件（MITライセンス）は
+<a href="license.html">ライセンスページ</a>にまとめています。
+</div>
+
+<h2>Go言語での利用例（コードサンプル）</h2>
+
+<h3>基本形：go-fmmlが音声出力を管理する場合</h3>
+<pre><code>package main
+
+import (
+    "log"
+
+    "github.com/megaak-soft/go-fmml/fileio"
+    "github.com/megaak-soft/go-fmml/fmcore"
+    "github.com/megaak-soft/go-fmml/player"
+)
+
+func main() {
+    if err := fileio.LoadFMVoiceFile("voice_fm.yaml"); err != nil {
+        log.Fatal(err)
+    }
+    if err := fileio.LoadPCMVoiceFile("voice_pcm.yaml"); err != nil {
+        log.Fatal(err)
+    }
+    if err := fileio.LoadMMLFile("bgm1.mml"); err != nil {
+        log.Fatal(err)
+    }
+
+    // 44.1kHzでオーディオデバイスを開き、内部でoto/v3のコンテキストを初期化・再生開始する。
+    engine, err := fmcore.NewEngine(44100)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer engine.Close()
+
+    onComplete := func() { log.Println("再生終了") }
+    if err := player.Play(engine, "bgm1", onComplete); err != nil {
+        log.Fatal(err)
+    }
+
+    select {} // ゲームループ等、アプリ側の待機処理に置き換える
+}
+</code></pre>
+
+<h3>Ebitengine自身の <code>oto/v3</code> コンテキストと併用する場合</h3>
+<pre><code>package main
+
+import (
+    "github.com/ebitengine/oto/v3"
+    "github.com/megaak-soft/go-fmml/fileio"
+    "github.com/megaak-soft/go-fmml/fmcore"
+    "github.com/megaak-soft/go-fmml/player"
+)
+
+func setupBGM(otoCtx *oto.Context) (*fmcore.Engine, error) {
+    if err := fileio.LoadFMVoiceFile("voice_fm.yaml"); err != nil {
+        return nil, err
+    }
+    if err := fileio.LoadMMLFile("bgm1.mml"); err != nil {
+        return nil, err
+    }
+
+    // オーディオデバイスは開かず、go-fmmlをただのio.Readerとして使う。
+    engine := fmcore.NewEngineWithoutOutput(44100)
+
+    // 既存のotoコンテキストに、go-fmmlのエンジンをプレイヤーとして登録する。
+    p := otoCtx.NewPlayer(engine)
+    p.Play()
+
+    return engine, player.Play(engine, "bgm1", nil)
+}
+</code></pre>
+
+<h3>文字列リテラルからMML/音色を直接読み込む場合（Phase 7）</h3>
+<pre><code>const mml = `
+[GoFMML File]
+[global]
+  tempo: 128
+  sequenceID: demo
+  loop: true
+[partSetting]
+part:
+  - partNo: 1
+    voiceID: 0
+    volume: 100
+    pan: 0
+[part1]
+  O4 L4 C D E F G A B O5 C
+[part1End]
+`
+
+fileio.SetMMLTextData(mml)
+</code></pre>
+
+<p class="note">各種パラメータの詳しい記載方法・設定可能範囲は、左のナビゲーションから各仕様ページ
+を参照してください。</p>
+
+<h2>作者について</h2>
+<div style="display:flex; align-items:center; gap:18px; margin:16px 0;">
+  <img src="img/megaak_icon.jpg" alt="MEGAAK SOFT" style="width:72px; height:72px; object-fit:cover; border-radius:50%; border:1px solid var(--border); flex:0 0 auto;">
+  <p style="margin:0;">
+  「MEGAAK SOFT」はインディーズゲーム開発個人プロジェクト、レトロ風2Dゲームを作っています。
+  </p>
+</div>
+<p>
+  <a href="https://megaak.com" target="_blank" rel="noopener">HP</a>
+  ／
+  <a href="https://github.com/megaak-soft/go-fmml" target="_blank" rel="noopener">GitHub</a>
+  ／
+  <a href="https://x.com/MegaakSoft" target="_blank" rel="noopener">X</a>
+</p>
+
+</main>
+</div>
+<footer>
+<hr>
+<p>
+© 2026 <a href="https://megaak.com">MEGAAK SOFT</a> —
+本ドキュメントは <a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank" rel="noopener">CC BY 4.0</a> の下でライセンスされています。
+</p>
+</footer>
+</body>
+</html>

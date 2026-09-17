@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>go-fmml Documentation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#9aa3b2; --accent:#7aa2ff; --accent2:#ffb454;
+    --code-bg:#11141b; --table-head:#1d2129;
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{line-height:1.8; font-size:15.5px;}
+  .layout{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{
+    width:220px; flex:0 0 220px; padding:28px 16px; position:sticky; top:0; align-self:flex-start;
+    height:100vh; overflow-y:auto; border-right:1px solid var(--border);
+  }
+  nav.side h1{font-size:17px; margin:0 0 4px; color:var(--text);}
+  nav.side .sub{font-size:11.5px; color:var(--muted); margin-bottom:20px;}
+  nav.side a{display:block; color:var(--muted); text-decoration:none; padding:7px 10px; border-radius:6px; font-size:13.5px;}
+  nav.side a:hover{background:var(--panel2); color:var(--text);}
+  nav.side a.current{background:var(--panel2); color:var(--accent); font-weight:600;}
+  main{flex:1; padding:36px 44px 80px; min-width:0;}
+  h1{font-size:28px; margin:0 0 6px;}
+  h2{font-size:20px; margin:40px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  h3{font-size:16px; margin:26px 0 10px; color:var(--accent);}
+  p{color:var(--text);}
+  .lead{color:var(--muted); font-size:16px;}
+  code{background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.92em; font-family: Consolas, "SF Mono", Menlo, monospace;}
+  pre{background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:16px 18px; overflow-x:auto; font-size:13px; line-height:1.6;}
+  pre code{background:none; border:none; padding:0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 22px; font-size:13.8px;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--table-head); color:var(--accent); font-weight:600;}
+  tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
+  .card-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; margin:18px 0 8px;}
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 18px;}
+  .card b{color:var(--accent);}
+  .card p{margin:6px 0 0; color:var(--muted); font-size:13.5px;}
+  .note{background:var(--panel2); border-left:3px solid var(--accent2); padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  .badge{display:inline-block; font-size:11px; padding:2px 8px; border-radius:20px; background:var(--panel2); color:var(--accent); border:1px solid var(--border); margin-left:6px;}
+  a{color:var(--accent);}
+  footer{max-width:1180px; margin:0 auto; padding:0 44px 60px 264px;}
+  footer hr{border:none; border-top:1px solid var(--border); margin:40px 0 18px;}
+  footer p{color:var(--muted); font-size:12.5px;}
+  .langswitch{position:fixed; top:16px; right:24px; z-index:50; display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px; font-size:12px; box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .langswitch a, .langswitch span{padding:4px 12px; border-radius:16px; text-decoration:none; color:var(--muted); font-weight:500;}
+  .langswitch a:hover{background:var(--panel2); color:var(--text);}
+  .langswitch span.current{background:var(--accent); color:#0f1115; font-weight:700;}
+  @media (max-width:860px){
+    .layout{flex-direction:column;}
+    nav.side{position:relative; width:auto; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:24px;}
+    footer{padding:0 24px 40px;}
+  }
+</style>
+</head>
+<body>
+<div class="langswitch"><a href="../index.html">日本語</a><span class="current">English</span></div>
+<div class="layout">
+<nav class="side">
+  <h1><img src="../img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+  <div class="sub">FM/PCM Sound Driver Docs</div>
+  <a class="current" href="index.html">Overview &amp; Getting Started</a>
+  <a href="api.html">Public API Reference</a>
+  <a href="fmvoice.html">FM Voice Parameters</a>
+  <a href="pcmvoice.html">PCM Voice Parameters</a>
+  <a href="mmlformat.html">MML File Structure</a>
+  <a href="mmlcommands.html">MML Command Reference</a>
+  <a href="smftool.html">SMF Conversion Tool</a>
+  <a href="license.html">License</a>
+</nav>
+<main>
+
+<h1><img src="../img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+<p class="lead">An asynchronous FM + PCM sound synthesis driver in Go (Golang), built for embedding
+game BGM.</p>
+<P><a href="https://github.com/megaak-soft/go-fmml" target="_blank">https://github.com/megaak-soft/go-fmml</a></P>
+
+
+<h2>What is this?</h2>
+<p>
+go-fmml combines an original FM synthesis core inspired by the design philosophy of classic YAMAHA
+FM chips with a PCM core that plays back WAV samples, and lets you author and play sequence data
+using an original MML (Music Macro Language) text format, as a Go library. It is designed to embed
+directly into a game project and play <b>BGM</b> <b>asynchronously</b> (never blocking the caller).
+</p>
+<p>
+This is not chip emulation and not a synthesis-accuracy reproduction project - it is an original
+implementation focused on "sounding like FM synthesis, letting you write BGM in MML, and being easy
+to embed in a game." It is not a port of, or derived from, any specific hardware's register map,
+emulator, or existing open-source implementation.
+</p>
+<p>
+This project was built with <a href="https://www.anthropic.com/claude-code" target="_blank" rel="noopener">Claude
+Code</a>, using a "Spec-Driven Development" approach: the engine spec, MML spec, and phase plan were
+written out in detail in a specification document (<code>CLAUDE.md</code>), and the AI implemented
+the code from it.
+</p>
+<p>
+AI-generated code carries a known risk of unintentional "license contamination" - copyleft (e.g. GPL)
+code patterns leaking in from the model's training data. go-fmml's specification document defines
+explicit rules to avoid this kind of contamination, and the AI is required to self-check against
+those rules on every code generation pass. go-fmml's source code itself is provided under the
+<b>MIT License</b>, and can be used freely, including for commercial use, redistribution, and
+embedding into games. See the <a href="license.html">License page</a> for details.
+</p>
+
+<h2>What it can do (feature list)</h2>
+<div class="card-grid">
+  <div class="card"><b>FM synthesis</b><p>4 operators × 8 algorithms, 8 selectable basic waveforms
+  (W1-W8), an LFO (vibrato), up to 16 parts, up to 16-voice polyphony per part.</p></div>
+  <div class="card"><b>PCM sound</b><p>WAV sample playback. Two types: drum-kit style
+  <code>oneShot</code> (up to 16 samples per part) and pitch-shiftable <code>long</code>
+  (loop/envelope/LFO support), up to 16 parts.</p></div>
+  <div class="card"><b>MML sequencer</b><p>Plays up to 32 parts (FM + PCM combined) in sample-accurate
+  sync using go-fmml's own MML spec, at a timing resolution of 1/192 of a 4/4 measure.</p></div>
+  <div class="card"><b>Master reverb</b><p>A stereo reverb selectable between a Schroeder type
+  (lightweight) and an FDN type (higher quality), with per-part and per-oneShot-note send levels.</p></div>
+  <div class="card"><b>MML expressiveness</b><p>Portamento, pitch-bend up/down, part mute/solo,
+  transpose, and a conductor part (tempo changes, loop jump points).</p></div>
+  <div class="card"><b>Playback control</b><p>Play/Pause/Resume/Stop/Rewind/SkipPlay, master volume
+  (instant or smooth), fade-in/fade-out/fade-in-and-out playback.</p></div>
+  <div class="card"><b>Flexible input</b><p>File-based loading (absolute path or <code>embed.FS</code>),
+  plus passing MML/FM voice/PCM voice data directly as Go string literals.</p></div>
+  <div class="card"><b>SMF conversion tool</b><p>The bundled <code>Smf2GoFMML</code> tool reads a
+  Standard MIDI File (Format 1) and converts it to go-fmml's MML format.</p></div>
+</div>
+
+<h2>Requirements</h2>
+<table>
+<tr><th>Item</th><th>Requirement</th></tr>
+<tr><td>Go</td><td>1.24.0 or later (matches the minimum required by <code>ebitengine/oto/v3</code>,
+which go-fmml depends on)</td></tr>
+<tr><td>Supported OS</td><td>Windows / macOS / Linux / Android / iOS / WebAssembly (matches the
+platforms supported by <code>ebitengine/oto/v3</code>, used for audio output)</td></tr>
+</table>
+
+<h2>Try the demo</h2>
+<p>
+A minimal working example that actually plays sound is included at
+<code>cmd/mmldemo</code>. It demonstrates the full flow from loading FM voice/MML files to
+playback.
+</p>
+<pre><code>cd cmd/mmldemo
+go run .</code></pre>
+<p class="note">The sample voice (<code>sample_fm.yaml</code>) and MML (<code>sample1.mml</code>)
+are placeholders and will be replaced later.</p>
+
+<h2>Performance characteristics</h2>
+<p>Audio rendering is sample-by-sample software synthesis. A few things worth knowing:</p>
+<ul>
+  <li>The theoretical worst case is up to 16 voices per part across all 16 FM parts + 16 PCM parts
+  (32 parts total) sounding simultaneously. In practice, real songs rarely have every part and every
+  voice sounding at once, so typical use (a handful to a dozen parts, a few simultaneous voices per
+  part) keeps the audio callback's CPU load light.</li>
+  <li>Only one reverb instance ever exists (a single unit on the master bus). The Schroeder type uses
+  a small number of delay lines and allpass filters; the FDN type uses a feedback delay network and
+  is somewhat more expensive to compute than the Schroeder type. When reverb is disabled
+  (<code>reverb: false</code>) it is fully bypassed and costs nothing. Reverb's internal math uses
+  <code>float32</code> to keep it lightweight.</li>
+  <li>PCM waveforms are held in memory as decoded <code>float32</code> sample arrays. The same WAV
+  file is never decoded twice - once loaded, its waveform data is cached and reused (shared across
+  <code>LoadPCMVoiceFile</code> / <code>LoadPCMVoiceFileFS</code> / <code>SetPCMVoiceData</code>).</li>
+  <li>Memory allocation mainly happens when registering voices or loading a sequence (i.e. when
+  switching songs); the note-rendering path itself is designed to avoid new allocations on the hot
+  path.</li>
+</ul>
+
+<h2>Relationship to ebitengine/oto/v3</h2>
+<p>
+Audio output uses the <a href="https://github.com/ebitengine/oto" target="_blank" rel="noopener">
+Ebitengine project's <code>github.com/ebitengine/oto/v3</code></a>. go-fmml's
+<code>fmcore.NewEngine</code> internally initializes an oto audio context, and the resulting
+<code>*fmcore.Engine</code> itself implements the <code>io.Reader</code>
+(<code>Read([]byte) (int, error)</code>) that oto's <code>oto.Player</code> expects, so it can be
+handed directly to an oto player.
+</p>
+<p>
+For apps that already manage their own oto context (for example, one that is also doing other audio
+playback through Ebitengine at the same time), <code>fmcore.NewEngineWithoutOutput</code> is also
+provided: go-fmml does not open an audio device itself, and your app keeps owning the oto context.
+See the code sample below.
+</p>
+<div class="note">
+<b>Third-party library license notices</b><br>
+go-fmml depends on a few OSS libraries internally (including indirect dependencies). Copyright in
+each library belongs to its own authors, and each library's own license terms apply independently
+of go-fmml's MIT license. The full dependency list and go-fmml's own usage terms (MIT License) are
+collected on the <a href="license.html">License page</a>.
+</div>
+
+<h2>Code samples (Go)</h2>
+
+<h3>Basic: go-fmml manages audio output itself</h3>
+<pre><code>package main
+
+import (
+    "log"
+
+    "github.com/megaak-soft/go-fmml/fileio"
+    "github.com/megaak-soft/go-fmml/fmcore"
+    "github.com/megaak-soft/go-fmml/player"
+)
+
+func main() {
+    if err := fileio.LoadFMVoiceFile("voice_fm.yaml"); err != nil {
+        log.Fatal(err)
+    }
+    if err := fileio.LoadPCMVoiceFile("voice_pcm.yaml"); err != nil {
+        log.Fatal(err)
+    }
+    if err := fileio.LoadMMLFile("bgm1.mml"); err != nil {
+        log.Fatal(err)
+    }
+
+    // Opens an audio device at 44.1kHz and initializes an oto/v3 context internally.
+    engine, err := fmcore.NewEngine(44100)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer engine.Close()
+
+    onComplete := func() { log.Println("playback finished") }
+    if err := player.Play(engine, "bgm1", onComplete); err != nil {
+        log.Fatal(err)
+    }
+
+    select {} // replace with your app's own wait/game loop
+}
+</code></pre>
+
+<h3>Sharing Ebitengine's own <code>oto/v3</code> context</h3>
+<pre><code>package main
+
+import (
+    "github.com/ebitengine/oto/v3"
+    "github.com/megaak-soft/go-fmml/fileio"
+    "github.com/megaak-soft/go-fmml/fmcore"
+    "github.com/megaak-soft/go-fmml/player"
+)
+
+func setupBGM(otoCtx *oto.Context) (*fmcore.Engine, error) {
+    if err := fileio.LoadFMVoiceFile("voice_fm.yaml"); err != nil {
+        return nil, err
+    }
+    if err := fileio.LoadMMLFile("bgm1.mml"); err != nil {
+        return nil, err
+    }
+
+    // Doesn't open an audio device - go-fmml is used purely as an io.Reader.
+    engine := fmcore.NewEngineWithoutOutput(44100)
+
+    // Registers go-fmml's engine as a player on your existing oto context.
+    p := otoCtx.NewPlayer(engine)
+    p.Play()
+
+    return engine, player.Play(engine, "bgm1", nil)
+}
+</code></pre>
+
+<h3>Loading MML/voice data directly from a string literal (Phase 7)</h3>
+<pre><code>const mml = `
+[GoFMML File]
+[global]
+  tempo: 128
+  sequenceID: demo
+  loop: true
+[partSetting]
+part:
+  - partNo: 1
+    voiceID: 0
+    volume: 100
+    pan: 0
+[part1]
+  O4 L4 C D E F G A B O5 C
+[part1End]
+`
+
+fileio.SetMMLTextData(mml)
+</code></pre>
+
+<p class="note">For the detailed syntax and valid ranges of each parameter, see the spec pages linked
+in the left navigation.</p>
+
+<h2>About the Author</h2>
+<div style="display:flex; align-items:center; gap:18px; margin:16px 0;">
+  <img src="../img/megaak_icon.jpg" alt="MEGAAK SOFT" style="width:72px; height:72px; object-fit:cover; border-radius:50%; border:1px solid var(--border); flex:0 0 auto;">
+  <p style="margin:0;">
+  MEGAAK SOFT is an indie solo game development project, making retro-style 2D games.
+  </p>
+</div>
+<p>
+  <a href="https://megaak.com" target="_blank" rel="noopener">Website</a>
+  /
+  <a href="https://github.com/megaak-soft/go-fmml" target="_blank" rel="noopener">GitHub</a>
+  /
+  <a href="https://x.com/MegaakSoft" target="_blank" rel="noopener">X</a>
+</p>
+
+</main>
+</div>
+<footer>
+<hr>
+<p>
+© 2026 <a href="https://megaak.com">MEGAAK SOFT</a> —
+This document is licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+</p>
+</footer>
+</body>
+</html>

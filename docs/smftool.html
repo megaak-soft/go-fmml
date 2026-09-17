@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>SMF変換ツール - go-fmml</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#9aa3b2; --accent:#7aa2ff; --accent2:#ffb454;
+    --code-bg:#11141b; --table-head:#1d2129;
+    font-family: -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{line-height:1.8; font-size:15.5px;}
+  .layout{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{width:220px; flex:0 0 220px; padding:28px 16px; position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto; border-right:1px solid var(--border);}
+  nav.side h1{font-size:17px; margin:0 0 4px;}
+  nav.side .sub{font-size:11.5px; color:var(--muted); margin-bottom:20px;}
+  nav.side a{display:block; color:var(--muted); text-decoration:none; padding:7px 10px; border-radius:6px; font-size:13.5px;}
+  nav.side a:hover{background:var(--panel2); color:var(--text);}
+  nav.side a.current{background:var(--panel2); color:var(--accent); font-weight:600;}
+  main{flex:1; padding:36px 44px 80px; min-width:0;}
+  h1{font-size:28px; margin:0 0 6px;}
+  h2{font-size:20px; margin:44px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  h3{font-size:16px; margin:26px 0 10px; color:var(--accent);}
+  p{color:var(--text);}
+  .lead{color:var(--muted); font-size:16px;}
+  code{background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.92em; font-family: Consolas, "SF Mono", Menlo, monospace;}
+  pre{background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:16px 18px; overflow-x:auto; font-size:13px; line-height:1.6;}
+  pre code{background:none; border:none; padding:0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 22px; font-size:13.3px;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--table-head); color:var(--accent); font-weight:600;}
+  .note{background:var(--panel2); border-left:3px solid var(--accent2); padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  .warn{background:var(--panel2); border-left:3px solid #ff6b6b; padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  .toc{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin:18px 0;}
+  .toc a{display:inline-block; margin:3px 10px 3px 0; font-size:13px;}
+  .tag{display:inline-block; font-size:11px; padding:1px 8px; border-radius:20px; background:var(--panel2); border:1px solid var(--border); color:var(--muted); margin-left:6px;}
+  a{color:var(--accent);}
+  footer{max-width:1180px; margin:0 auto; padding:0 44px 60px 264px;}
+  footer hr{border:none; border-top:1px solid var(--border); margin:40px 0 18px;}
+  footer p{color:var(--muted); font-size:12.5px;}
+  .langswitch{position:fixed; top:16px; right:24px; z-index:50; display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px; font-size:12px; box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .langswitch a, .langswitch span{padding:4px 12px; border-radius:16px; text-decoration:none; color:var(--muted); font-weight:500;}
+  .langswitch a:hover{background:var(--panel2); color:var(--text);}
+  .langswitch span.current{background:var(--accent); color:#0f1115; font-weight:700;}
+  @media (max-width:860px){
+    .layout{flex-direction:column;}
+    nav.side{position:relative; width:auto; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:24px;} footer{padding:0 24px 40px;}
+  }
+</style>
+</head>
+<body>
+<div class="langswitch"><span class="current">日本語</span><a href="en/smftool.html">English</a></div>
+<div class="layout">
+<nav class="side">
+  <h1><img src="img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+  <div class="sub">FM/PCM音源ドライバ ドキュメント</div>
+  <a href="index.html">概要・はじめに</a>
+  <a href="api.html">公開メソッド仕様</a>
+  <a href="fmvoice.html">FM音色パラメータ仕様</a>
+  <a href="pcmvoice.html">PCM音色パラメータ仕様</a>
+  <a href="mmlformat.html">MMLファイル構成仕様</a>
+  <a href="mmlcommands.html">MMLコマンド仕様</a>
+  <a class="current" href="smftool.html">SMF変換ツール</a>
+  <a href="license.html">ライセンス</a>
+</nav>
+<main>
+
+<h1>SMF変換ツール（Smf2GoFMML）</h1>
+<p class="lead">スタンダードMIDIファイル（SMF）を読み込み、go-fmmlのMML仕様に変換して
+<code>.mml</code>ファイルを出力する、独立したコマンドラインツールです。</p>
+
+<div class="toc">
+<a href="#overview">概要</a>
+<a href="#build">ビルド方法</a>
+<a href="#usage">使用方法</a>
+<a href="#tags">トラック名埋め込み文字列（タグ）</a>
+<a href="#conversion">データ変換内容</a>
+<a href="#caveats">注意事項</a>
+</div>
+
+<h2 id="overview">概要</h2>
+<p>
+<code>Smf2GoFMML</code>は、go-fmmlのコア（FM/PCM合成エンジンやMML再生機能）本体とは別に、
+<code>tools/smf2gofmml</code>配下に置かれたスタンドアロンのコマンドラインアプリです。手持ちの
+スタンダードMIDIファイル（Format 1を想定）を読み込み、トラックごとのノート・テンポ・トラック名など
+を解析して、go-fmmlのMML仕様に沿った<code>.mml</code>テキストへ変換・出力します。実行にgo-fmmlの
+音声エンジン自体（<code>oto/v3</code>等）は不要で、ファイル変換のみを行います。
+</p>
+<p>
+変換結果はそのまま使える完成品というより、<b>叩き台</b>です。音色ID・ミュート・リバーブセンド・
+ループ設定・コンダクターパートなど、SMFから読み取れない情報はデフォルト値で埋められるため、変換後
+に<a href="mmlformat.html">MMLファイル構成仕様</a>・<a href="mmlcommands.html">MMLコマンド仕様</a>
+を参照しながら手動で編集することを前提としています。
+</p>
+
+<h2 id="build">ビルド方法</h2>
+<p>リポジトリの<code>tools/smf2gofmml</code>ディレクトリで、実行ファイルを
+<code>cmd</code>サブフォルダへ直接ビルドします（ツールは自分自身の実行ファイルの場所を基準に入出力
+フォルダを解決するため、この配置が前提です）。</p>
+<pre><code>cd tools/smf2gofmml
+go build -o cmd/Smf2GoFMML.exe .</code></pre>
+
+<h2 id="usage">使用方法</h2>
+<p>ビルドした実行ファイル（<code>cmd/Smf2GoFMML.exe</code>）と同じ階層に、入力用の
+<code>smf</code>フォルダと出力用の<code>convert</code>フォルダ（無ければ自動作成）が置かれます。</p>
+<pre><code># cmd フォルダに移動して実行
+cd tools/smf2gofmml/cmd
+
+# ファイル名のみを指定した場合、同階層の smf フォルダから探索する
+Smf2GoFMML.exe bgm1.mid          # 実体は ./smf/bgm1.mid
+
+# 絶対パスを指定した場合はそのまま読み込む
+Smf2GoFMML.exe C:\path\to\bgm1.mid</code></pre>
+<table>
+<tr><th>項目</th><th>内容</th></tr>
+<tr><td>起動引数</td><td>変換対象のSMFファイルパス。フルパス指定、または実行ファイルと同階層の
+<code>smf</code>フォルダ内のファイル名指定のいずれか。</td></tr>
+<tr><td>出力先</td><td>実行ファイルと同階層の<code>convert</code>フォルダ（無ければ自動作成）。</td></tr>
+<tr><td>出力ファイル名</td><td><code>&lt;曲名&gt;.mml</code>。曲名はSMFのシーケンス名／トラック名
+メタイベントから取得（Windowsのファイル名として使えない文字は<code>_</code>に置換、取得できない
+場合は<code>untitled</code>）。</td></tr>
+<tr><td>エラー時</td><td>コンソールに理由を出力して終了（読み込み失敗、SMF自体が不正、ノートを含む
+トラックが1つもない、等）。</td></tr>
+<tr><td>警告時</td><td>変換は継続し、コンソールに<code>warning:</code>付きで内容を出力（例: パート
+上限超過によるトラックスキップ）。</td></tr>
+</table>
+
+<h2 id="tags">トラック名埋め込み文字列（タグ）</h2>
+<p>各トラックのトラック名（シーケンス／トラック名メタイベント）の先頭に、以下のタグ文字列を付けて
+おくことで、変換後にどの種類のパートになるかを指定できます。</p>
+<table>
+<tr><th>タグ</th><th>変換先パート種別</th></tr>
+<tr><td><code>[FM]</code></td><td>FM音色パート（<code>[partN]</code>）</td></tr>
+<tr><td><code>[PCM long]</code></td><td>PCM音色パート・longタイプ（<code>[pcmPartX]</code>、
+<code>partType: long</code>）</td></tr>
+<tr><td><code>[PCM oneShot]</code></td><td>PCM音色パート・oneShotタイプ（<code>[pcmPartX]</code>、
+<code>partType: oneShot</code>）</td></tr>
+<tr><td>タグなし</td><td>FM音色パート扱い（デフォルト）</td></tr>
+</table>
+<div class="note">
+タグの判定は大文字小文字を区別せず、<code>[ ]</code>内部の空白（<code>[PCM oneShot ]</code>や
+<code>[ PCM  oneShot ]</code>など）は無視して比較されるため、手入力で多少ゆらいでいても正しく認識
+されます。ただし単語自体のスペルは一致させる必要があります（<code>PCM</code> / <code>long</code> /
+<code>oneShot</code>）。出力される<code>.mml</code>の各パート設定・パート本体の直前には、タグを
+除いた残りのトラック名がコメント（<code>#</code>）として自動的に書き出されます。
+</div>
+<pre><code># トラック名の例
+[FM]Lead
+[PCM long]Strings
+[PCM oneShot]Drums
+Bass                # タグ無し → FM音色パート扱い</code></pre>
+
+<h2 id="conversion">データ変換内容</h2>
+
+<h3>[global]セクション</h3>
+<table>
+<tr><th>項目</th><th>変換内容</th></tr>
+<tr><td><code>tempo</code></td><td>SMF内で最初に見つかったテンポメタイベントの値（小数点以下切り
+捨て）。見つからない場合はデフォルト<code>120</code>。</td></tr>
+<tr><td><code>sequenceID</code></td><td>SMF内で最初に見つかったトラック名（シーケンス名）。ダブル
+クォーテーションは除去。見つからない場合は<code>untitled</code>。</td></tr>
+<tr><td><code>loop</code></td><td>常に<code>false</code>（固定デフォルト）。</td></tr>
+<tr><td><code>volume</code></td><td>常に<code>100</code>（固定デフォルト）。</td></tr>
+<tr><td><code>reverb</code></td><td>常に<code>false</code>（固定デフォルト）。</td></tr>
+<tr><td><code>reverbType</code></td><td>常に<code>normal</code>（固定デフォルト）。</td></tr>
+<tr><td><code>reverbTime</code></td><td>常に<code>2.0</code>（固定デフォルト）。</td></tr>
+<tr><td><code>reverbLevel</code></td><td>常に<code>100</code>（固定デフォルト）。</td></tr>
+</table>
+
+<h3>パート割り当て</h3>
+<ul>
+  <li>SMFのトラック順に、各パートタグに応じて<b>FM音色パートは1, 2, 3...16</b>、<b>PCM音色パートは
+  A, B, C...P</b>の順に採番されます（FM用とPCM用のカウンタはそれぞれ独立）。</li>
+  <li>ノートデータを1つも含まないトラックはスキップされます（変換対象になりません）。</li>
+  <li>各種別のパート上限（FM16、PCM16）を超えるトラックは、警告を出した上でそのトラックごとスキップ
+  されます（変換全体は中断しません）。</li>
+  <li>各パートの<code>voiceID</code>は常に<code>0</code>、<code>mute</code>は常に<code>false</code>
+  で出力されます（音色そのものはSMFに含まれないため）。</li>
+</ul>
+
+<h3>パート音量・パン</h3>
+<ul>
+  <li>各トラックの先頭付近にCC（コントロールチェンジ）<b>7番（ボリューム）</b>が存在する場合、その
+  値（0-127）がそのままパートの<code>volume</code>に設定されます。無ければ<code>100</code>。</li>
+  <li>各トラックの先頭付近にCC<b>10番（パン）</b>が存在する場合、MIDIの0-127段階からgo-fmmlの
+  -16(左)〜16(右)の32段階へ変換して<code>pan</code>に設定されます。無ければ<code>0</code>（中央）。</li>
+  <li>トラック中盤以降のボリューム／パン変化、エクスプレッション、ピッチベンド、ポルタメント等の
+  その他コントロールデータは無視されます（先頭付近の値のみを採用）。</li>
+</ul>
+
+<h3>ノート→MMLコマンド変換（FM / PCM long）</h3>
+<ul>
+  <li>SMFの時間分解能（division）は、go-fmml内部のtick分解能へスケール変換されます。</li>
+  <li>同一発音タイミングの複数ノートはコード（和音、<code>[ ]</code>）としてまとめられます。コード
+  内で符割（長さ）が異なるノートが含まれる場合は最長の音に統一され、それ以外のノートの長さ情報は
+  無視されます。</li>
+  <li>各ノート（またはコード）の長さは、次のノートが始まるまでの間隔にもとづき、go-fmmlのMML音符長
+  トークン（全音符・2分音符・4分音符…32分音符、付点、3連符）へ、最長のトークンから貪欲法で分解され
+  ます。1トークンで表現しきれない長さはタイ（<code>&amp;</code>）で複数トークンに分割されます。
+  32分音符未満の端数は切り捨てられます。</li>
+  <li>実際に音が鳴っている長さ（ノートオン〜ノートオフ）と、次のノートまでの間隔の比率から、スタッ
+  カート（<code>Q</code>）が4段階（Q1=25%、Q2=50%、Q3=75%、Q4=100%）に吸着されます。</li>
+  <li>音が鳴っていない区間は休符（<code>R</code>）として出力されます。</li>
+  <li>ベロシティは無視され、常に<code>V127</code>固定で出力されます。</li>
+</ul>
+
+<h3>ノート→MMLコマンド変換（PCM oneShot）</h3>
+<ul>
+  <li>oneShotトラックは、通常のFM/PCM longとは異なる専用書式に変換されます：使用されている音階
+  （ピッチ）ごとに、それぞれ独立した<code>ノート名{ ... }</code>ブロックへ分解され、各ブロックは
+  時間軸0起点から並行して進行するタイムラインとして書き出されます
+  （<a href="mmlcommands.html#oneshot">PCM(oneShot)パート コマンド</a>参照）。</li>
+  <li>各ブロック内は、そのピッチの発音（<code>X</code>）と休符（<code>R</code>）の並びとして、発音
+  タイミングの間隔にもとづき同様にMML音符長トークンへ分解されます。</li>
+  <li>各ピッチの最後のトリガー長は、そのトラック全体の最終発音タイミングに揃えられます（ピッチごと
+  にバラバラの余白を追加しないため、曲全体のループ長がピッチ単位の端数で不必要に延びません）。</li>
+</ul>
+
+<h2 id="caveats">注意事項</h2>
+<div class="warn">
+<b>出力はあくまで下書きです。</b> 音色（<code>voiceID</code>）、ミュート、ソロ、トランスポーズ、
+リバーブセンド、コンダクターパート、ループ設定などSMFに存在しない情報は一切変換されず、固定の
+デフォルト値のまま出力されます。実際の楽曲として仕上げるには、出力された<code>.mml</code>を
+<a href="mmlformat.html">MMLファイル構成仕様</a>にもとづいて手動編集し、
+<a href="fmvoice.html">FM音色パラメータ仕様</a> / <a href="pcmvoice.html">PCM音色パラメータ仕様</a>
+で作成した音色ファイルと組み合わせる必要があります。
+</div>
+<ul>
+  <li>SMPTE形式のタイムディビジョン（フレーム/秒ベース）を使用したSMFファイルはサポートされません。</li>
+  <li>仕様上はFormat 1のSMFを対象としています。他フォーマットのファイルでも構造上読み込める場合が
+  ありますが、動作確認・サポート対象はFormat 1のみです。</li>
+  <li>実行ファイルは自分自身のパスを基準に<code>smf</code> / <code>convert</code>フォルダを解決する
+  ため、実行ファイルを単体でコピーして別の場所から実行する場合は、同じ階層にこの2フォルダ構成を
+  用意する必要があります。</li>
+  <li>変換元の曲名にファイル名として使用できない文字（<code>\ / : * ? " &lt; &gt; |</code>等）が
+  含まれる場合は、出力ファイル名内でアンダースコア（<code>_</code>）に置換されます。</li>
+</ul>
+
+</main>
+</div>
+<footer>
+<hr>
+<p>
+© 2026 <a href="https://megaak.com">MEGAAK SOFT</a> —
+本ドキュメントは <a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank" rel="noopener">CC BY 4.0</a> の下でライセンスされています。
+</p>
+</footer>
+</body>
+</html>

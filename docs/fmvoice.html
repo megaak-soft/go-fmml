@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>FM音色パラメータ仕様 - go-fmml</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#9aa3b2; --accent:#7aa2ff; --accent2:#ffb454;
+    --code-bg:#11141b; --table-head:#1d2129;
+    font-family: -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{line-height:1.8; font-size:15.5px;}
+  .layout{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{width:220px; flex:0 0 220px; padding:28px 16px; position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto; border-right:1px solid var(--border);}
+  nav.side h1{font-size:17px; margin:0 0 4px;}
+  nav.side .sub{font-size:11.5px; color:var(--muted); margin-bottom:20px;}
+  nav.side a{display:block; color:var(--muted); text-decoration:none; padding:7px 10px; border-radius:6px; font-size:13.5px;}
+  nav.side a:hover{background:var(--panel2); color:var(--text);}
+  nav.side a.current{background:var(--panel2); color:var(--accent); font-weight:600;}
+  main{flex:1; padding:36px 44px 80px; min-width:0;}
+  h1{font-size:28px; margin:0 0 6px;}
+  h2{font-size:20px; margin:44px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  h3{font-size:16px; margin:26px 0 10px; color:var(--accent);}
+  p{color:var(--text);}
+  .lead{color:var(--muted); font-size:16px;}
+  code{background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.92em; font-family: Consolas, "SF Mono", Menlo, monospace;}
+  pre{background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:16px 18px; overflow-x:auto; font-size:13px; line-height:1.6;}
+  pre code{background:none; border:none; padding:0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 22px; font-size:13.5px;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--table-head); color:var(--accent); font-weight:600;}
+  .note{background:var(--panel2); border-left:3px solid var(--accent2); padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  a{color:var(--accent);}
+  .alg-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; margin:16px 0 8px;}
+  .alg-card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px 16px;}
+  .alg-card .alg-title{font-weight:700; color:var(--accent); font-size:14px; margin-bottom:6px;}
+  .alg-card .alg-desc{color:var(--muted); font-size:12.8px; margin-top:8px;}
+  .alg-card svg{display:block; margin:0 auto;}
+  .opbox rect{fill:var(--panel2); stroke:var(--border); stroke-width:1.5;}
+  .opbox.carrier rect{fill:rgba(255,180,84,0.14); stroke:var(--accent2); stroke-width:2;}
+  .opbox text{fill:var(--text); font-size:13px; font-family:Consolas,monospace; text-anchor:middle; dominant-baseline:middle;}
+  .edge{stroke:var(--muted); stroke-width:1.6; marker-end:url(#arrowhead);}
+  footer{max-width:1180px; margin:0 auto; padding:0 44px 60px 264px;}
+  footer hr{border:none; border-top:1px solid var(--border); margin:40px 0 18px;}
+  footer p{color:var(--muted); font-size:12.5px;}
+  @media (max-width:860px){
+    .layout{flex-direction:column;}
+    nav.side{position:relative; width:auto; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:24px;} footer{padding:0 24px 40px;}
+  }
+  .langswitch{position:fixed; top:16px; right:24px; z-index:50; display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px; font-size:12px; box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .langswitch a, .langswitch span{padding:4px 12px; border-radius:16px; text-decoration:none; color:var(--muted); font-weight:500;}
+  .langswitch a:hover{background:var(--panel2); color:var(--text);}
+  .langswitch span.current{background:var(--accent); color:#0f1115; font-weight:700;}
+</style>
+</head>
+<body>
+<div class="langswitch"><span class="current">日本語</span><a href="en/fmvoice.html">English</a></div>
+<div class="layout">
+<nav class="side">
+  <h1><img src="img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+  <div class="sub">FM/PCM音源ドライバ ドキュメント</div>
+  <a href="index.html">概要・はじめに</a>
+  <a href="api.html">公開メソッド仕様</a>
+  <a class="current" href="fmvoice.html">FM音色パラメータ仕様</a>
+  <a href="pcmvoice.html">PCM音色パラメータ仕様</a>
+  <a href="mmlformat.html">MMLファイル構成仕様</a>
+  <a href="mmlcommands.html">MMLコマンド仕様</a>
+  <a href="smftool.html">SMF変換ツール</a>
+  <a href="license.html">ライセンス</a>
+</nav>
+<main>
+
+<h1>FM音色パラメータ仕様</h1>
+<p class="lead">4オペレータFM音源の音色（音色）を定義するYAMLファイルの記載方法です。1ファイルに
+複数音色を定義できます。</p>
+
+<h2>ファイル形式</h2>
+<p>YAML形式。コメント行は<code>#</code>で表現し、空行・スペースのみの行は無視されます。
+<code>fileio.LoadFMVoiceFile</code> / <code>LoadFMVoiceFileFS</code> / <code>SetFMVoiceData</code>
+のいずれかで読み込みます。</p>
+
+<pre><code>fmVoice:
+  - voiceID: 0
+    algorithm: 2
+    feedback: 20
+    lfo: true
+    lfoDelay: 0.3
+    lfoFade: 0.4
+    lfoDepth: 30
+    lfoHz: 7
+    operators:
+      - multiple: 1
+        totallevel: 127
+        detuneCents: 0
+        wave: W1
+        envelope: "11, 10, 0.6, 4, 12"
+      - multiple: 2
+        totallevel: 40
+        detuneCents: 0
+        wave: W1
+        envelope: "31, 12, 0.3, 4, 12"
+      - multiple: 1
+        totallevel: 30
+        detuneCents: 0
+        wave: W2
+        envelope: "31, 10, 0.5, 4, 12"
+      - multiple: 1
+        totallevel: 0
+        detuneCents: 0
+        wave: W2
+        envelope: "31, 8, 0.7, 2, 12"</code></pre>
+
+<h2>音色パラメータ一覧</h2>
+<table>
+<tr><th>キー</th><th>範囲・書式</th><th>説明</th></tr>
+<tr><td><code>voiceID</code></td><td>整数</td><td>音色を一意に識別するID。<code>[partSetting]</code>の
+<code>voiceID</code>や<code>RegisterVoice</code>から参照します。</td></tr>
+<tr><td><code>algorithm</code></td><td>0〜7の整数</td><td>4基のオペレータの接続方法（下記「アルゴリ
+ズム一覧」参照）。</td></tr>
+<tr><td><code>feedback</code></td><td>0〜7</td><td>オペレータ1(OP1)にかけるセルフフィードバック量。
+7を超える値は7として扱われます。</td></tr>
+<tr><td><code>lfo</code></td><td>true / false</td><td>ビブラートLFOの有効/無効。未設定時はfalse
+（Phase 8）。</td></tr>
+<tr><td><code>lfoDelay</code></td><td>秒（0.1秒単位）</td><td>発音開始からLFOが掛かり始めるまでの
+遅延時間。未設定時のデフォルトは<code>0.4</code>。</td></tr>
+<tr><td><code>lfoFade</code></td><td>秒（0.1秒単位）</td><td>LFO開始から深さが最大になるまでの時間。
+未設定時のデフォルトは<code>0.5</code>。</td></tr>
+<tr><td><code>lfoDepth</code></td><td>セント（100=半音1個分）</td><td>LFOの揺れ幅。未設定時の
+デフォルトは<code>30</code>。</td></tr>
+<tr><td><code>lfoHz</code></td><td>Hz</td><td>LFOの周期。未設定時のデフォルトは<code>6</code>。</td></tr>
+</table>
+
+<h3>operators（4要素固定、各オペレータ共通）</h3>
+<table>
+<tr><th>キー</th><th>範囲・書式</th><th>説明</th></tr>
+<tr><td><code>multiple</code></td><td>正の小数</td><td>ノート基本周波数に対する周波数比。値が大きい
+ほど倍音的に高い成分になります。クランプはされません。</td></tr>
+<tr><td><code>totallevel</code></td><td>0（最大音量）〜127（無音）</td><td>そのオペレータの出力減衰
+量。キャリア（音として出力されるオペレータ）では音量、モジュレータでは変調の深さに相当します。
+約0.75dB/ステップで減衰します。</td></tr>
+<tr><td><code>detuneCents</code></td><td>セント（100=半音1個分）</td><td><code>multiple</code>に
+対する微調整デチューン。正負両方指定可能です。</td></tr>
+<tr><td><code>wave</code></td><td><code>W1</code>〜<code>W8</code></td><td>基本波形（下記「基本
+波形一覧」参照）。未設定または無効値は<code>W1</code>（正弦波）として扱われます。</td></tr>
+<tr><td><code>envelope</code></td><td><code>"attackRate, decay1Rate, sustainLevel, decay2Rate, releaseRate"</code>
+のカンマ区切り文字列</td><td>下記「エンベロープ」参照。</td></tr>
+</table>
+
+<h3>envelope（5項目）</h3>
+<table>
+<tr><th>項目（記載順）</th><th>範囲</th><th>説明</th></tr>
+<tr><td>attackRate</td><td>0〜31</td><td>アタック（無音から最大音量に達するまで）の速さ。0は立ち上
+がらない、31が最速。</td></tr>
+<tr><td>decay1Rate</td><td>0〜31</td><td>最大音量からsustainLevelまで減衰する速さ。0は最大音量を
+保持し続ける。</td></tr>
+<tr><td>sustainLevel</td><td>0.0〜1.0</td><td>decay1が落ち着く先のレベル。</td></tr>
+<tr><td>decay2Rate</td><td>0〜31</td><td>sustainLevelから0へゆっくり減衰する速さ（セカンダリ
+ディケイ）。0は減衰せず持続。</td></tr>
+<tr><td>releaseRate</td><td>0〜31</td><td>ノートオフ後、無音になるまでの速さ。0は減衰しません
+（キャリアでは音が鳴り止まなくなるため注意）。</td></tr>
+</table>
+<div class="note">レート値は<code>0〜31</code>の対数的スケールで、実時間（約8秒〜数ミリ秒）に変換
+されます。値が小さいほどゆっくり、大きいほど速く変化します。</div>
+
+<h2>基本波形一覧（W1〜W8）</h2>
+<p><code>wave</code>で選択できる8種類の基本波形です。<code>phase</code>は0〜2πの位相を表します。</p>
+<table>
+<tr><th>選択子</th><th>名称</th><th>波形の特徴</th></tr>
+<tr><td><code>W1</code></td><td>正弦波（サイン波）</td><td>全周期の基本波形。既存音色との後方互換の
+デフォルト。</td></tr>
+<tr><td><code>W2</code></td><td>半波整流正弦波</td><td>正（上）の半周期のみを取り出し、負（下）を0
+に固定。</td></tr>
+<tr><td><code>W3</code></td><td>全波整流正弦波</td><td>負（下）の半周期を正（上）へ反転。</td></tr>
+<tr><td><code>W4</code></td><td>半波整流正弦波（周期半分）</td><td>前半のみ正の半周期で、後半は0。</td></tr>
+<tr><td><code>W5</code></td><td>鋸の歯状に近い正弦波</td><td>正の半波を2倍周期（半分の幅）で2回
+繰り返す。</td></tr>
+<tr><td><code>W6</code></td><td>全波整流（周期半分）</td><td>W3の山をさらに2倍の密度で詰めた形。</td></tr>
+<tr><td><code>W7</code></td><td>正の全波整流（極性あり）</td><td>W3を小さくし、正側にシフトした
+波形。</td></tr>
+<tr><td><code>W8</code></td><td>非対称鋸の歯状正弦波</td><td>W5の交互反転版。</td></tr>
+</table>
+
+<h2>アルゴリズム一覧（0〜7）</h2>
+<p>4基のオペレータ（図ではOP1〜OP4、内部では0〜3）をどう接続するかを選びます。矢印はモジュレータ
+→キャリアの変調方向、オレンジ枠がそのアルゴリズムで音として出力される「キャリア」です。オペレータ
+1(OP1)には全アルゴリズム共通で<code>feedback</code>によるセルフフィードバックを追加でかけられます。</p>
+
+<div class="alg-grid">
+
+<div class="alg-card"><div class="alg-title">algorithm: 0 — フルシリアルチェーン</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<defs><marker id="a0" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9aa3b2"/></marker></defs>
+<g class="edge" marker-end="url(#a0)">
+<line x1="74" y1="27" x2="138" y2="27"/>
+<line x1="172" y1="44" x2="172" y2="88"/>
+<line x1="138" y1="107" x2="76" y2="107"/>
+</g>
+<g class="opbox"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">OP1→OP2→OP3→OP4 の一直線。出力 = OP4。最もFM感（倍音の複雑さ）が強く出る
+基本形です。</div></div>
+
+<div class="alg-card"><div class="alg-title">algorithm: 1</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<defs><marker id="a1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9aa3b2"/></marker></defs>
+<g class="edge" marker-end="url(#a1)">
+<line x1="74" y1="44" x2="138" y2="90"/>
+<line x1="140" y1="44" x2="76" y2="90"/>
+<line x1="138" y1="107" x2="76" y2="107"/>
+</g>
+<g class="opbox"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">OP1→OP4、OP2→OP3→OP4。出力 = OP4。2系統のモジュレータが1つのキャリアに
+合流します。</div></div>
+
+<div class="alg-card"><div class="alg-title">algorithm: 2</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<defs><marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9aa3b2"/></marker></defs>
+<g class="edge" marker-end="url(#a2)">
+<line x1="76" y1="44" x2="142" y2="88"/>
+<line x1="140" y1="44" x2="76" y2="90"/>
+<line x1="138" y1="107" x2="76" y2="107"/>
+</g>
+<g class="opbox"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">OP1→OP4、OP2→OP3→OP4。出力 = OP4。algorithm 1と似ますが、OP1が直接OP4を
+変調する点が異なります（サンプル音色 voiceID:0 で使用）。</div></div>
+
+<div class="alg-card"><div class="alg-title">algorithm: 3</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<defs><marker id="a3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9aa3b2"/></marker></defs>
+<g class="edge" marker-end="url(#a3)">
+<line x1="74" y1="27" x2="138" y2="27"/>
+<line x1="172" y1="44" x2="172" y2="88"/>
+<line x1="138" y1="107" x2="76" y2="107"/>
+</g>
+<g class="opbox"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">OP1→OP2→OP4、OP3→OP4。出力 = OP4。2系統のモジュレータ経路が1つのキャリア
+に合流する構成です。</div></div>
+
+<div class="alg-card"><div class="alg-title">algorithm: 4 — 2系統の並列FMペア</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<defs><marker id="a4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9aa3b2"/></marker></defs>
+<g class="edge" marker-end="url(#a4)">
+<line x1="74" y1="27" x2="138" y2="27"/>
+<line x1="74" y1="107" x2="138" y2="107"/>
+</g>
+<g class="opbox"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox carrier"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">(OP1→OP2) と (OP3→OP4) が独立に並列動作。出力 = OP2＋OP4。2つの音色を重ねた
+ような厚みのある音になります。</div></div>
+
+<div class="alg-card"><div class="alg-title">algorithm: 5 — 1対多モジュレータ</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<defs><marker id="a5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9aa3b2"/></marker></defs>
+<g class="edge" marker-end="url(#a5)">
+<line x1="74" y1="27" x2="138" y2="27"/>
+<line x1="60" y1="44" x2="60" y2="90"/>
+<line x1="76" y1="40" x2="142" y2="88"/>
+</g>
+<g class="opbox"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox carrier"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox carrier"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">OP1が OP2・OP3・OP4 の3つを同時に変調。出力 = OP2＋OP3＋OP4。1個のモジュレータ
+で複数キャリアを揺らす構成です。</div></div>
+
+<div class="alg-card"><div class="alg-title">algorithm: 6</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<defs><marker id="a6" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9aa3b2"/></marker></defs>
+<g class="edge" marker-end="url(#a6)">
+<line x1="74" y1="27" x2="138" y2="27"/>
+</g>
+<g class="opbox"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox carrier"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox carrier"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">OP1→OP2のみ変調あり、OP3・OP4は完全独立のキャリア。出力 = OP2＋OP3＋OP4。</div></div>
+
+<div class="alg-card"><div class="alg-title">algorithm: 7 — 全独立（加算合成）</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<g class="opbox carrier"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox carrier"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox carrier"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">変調接続なし。4基とも独立キャリア。出力 = OP1＋OP2＋OP3＋OP4。オルガン的な
+加算合成音に向きます。</div></div>
+
+</div>
+
+<h2>設定例</h2>
+<p>ベース/リード寄りの音色（シリアル寄りのalgorithm 2、波形はキャリア寄りにW2）：</p>
+<pre><code>fmVoice:
+  - voiceID: 0
+    algorithm: 4
+    feedback: 20
+    operators:
+      - multiple: 20
+        totallevel: 20
+        detuneCents: 0
+        wave: W1
+        envelope: "28, 10, 0.6, 4, 20"
+      - multiple: 2
+        totallevel: 40
+        detuneCents: 0
+        wave: W1
+        envelope: "31, 12, 0.3, 4, 20"
+      - multiple: 1
+        totallevel: 30
+        detuneCents: 0
+        wave: W2
+        envelope: "31, 10, 0.5, 4, 20"
+      - multiple: 1
+        totallevel: 0
+        detuneCents: 0
+        wave: W2
+        envelope: "31, 8, 0.7, 2, 20"</code></pre>
+
+<div class="note">未定義・不正な値（YAMLパースエラー等の軽微なもの）は警告ログを出力した上で0扱い
+にして解析を継続します。YAML自体が不正な場合のみ致命的エラーとして読み込みが中止されます。</div>
+
+</main>
+</div>
+<footer>
+<hr>
+<p>
+© 2026 <a href="https://megaak.com">MEGAAK SOFT</a> —
+本ドキュメントは <a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank" rel="noopener">CC BY 4.0</a> の下でライセンスされています。
+</p>
+</footer>
+</body>
+</html>

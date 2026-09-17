@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SMF Conversion Tool - go-fmml</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#9aa3b2; --accent:#7aa2ff; --accent2:#ffb454;
+    --code-bg:#11141b; --table-head:#1d2129;
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{line-height:1.8; font-size:15.5px;}
+  .layout{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{width:220px; flex:0 0 220px; padding:28px 16px; position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto; border-right:1px solid var(--border);}
+  nav.side h1{font-size:17px; margin:0 0 4px;}
+  nav.side .sub{font-size:11.5px; color:var(--muted); margin-bottom:20px;}
+  nav.side a{display:block; color:var(--muted); text-decoration:none; padding:7px 10px; border-radius:6px; font-size:13.5px;}
+  nav.side a:hover{background:var(--panel2); color:var(--text);}
+  nav.side a.current{background:var(--panel2); color:var(--accent); font-weight:600;}
+  main{flex:1; padding:36px 44px 80px; min-width:0;}
+  h1{font-size:28px; margin:0 0 6px;}
+  h2{font-size:20px; margin:44px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  h3{font-size:16px; margin:26px 0 10px; color:var(--accent);}
+  p{color:var(--text);}
+  .lead{color:var(--muted); font-size:16px;}
+  code{background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.92em; font-family: Consolas, "SF Mono", Menlo, monospace;}
+  pre{background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:16px 18px; overflow-x:auto; font-size:13px; line-height:1.6;}
+  pre code{background:none; border:none; padding:0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 22px; font-size:13.3px;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--table-head); color:var(--accent); font-weight:600;}
+  .note{background:var(--panel2); border-left:3px solid var(--accent2); padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  .warn{background:var(--panel2); border-left:3px solid #ff6b6b; padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  .toc{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin:18px 0;}
+  .toc a{display:inline-block; margin:3px 10px 3px 0; font-size:13px;}
+  .tag{display:inline-block; font-size:11px; padding:1px 8px; border-radius:20px; background:var(--panel2); border:1px solid var(--border); color:var(--muted); margin-left:6px;}
+  a{color:var(--accent);}
+  footer{max-width:1180px; margin:0 auto; padding:0 44px 60px 264px;}
+  footer hr{border:none; border-top:1px solid var(--border); margin:40px 0 18px;}
+  footer p{color:var(--muted); font-size:12.5px;}
+  .langswitch{position:fixed; top:16px; right:24px; z-index:50; display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px; font-size:12px; box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .langswitch a, .langswitch span{padding:4px 12px; border-radius:16px; text-decoration:none; color:var(--muted); font-weight:500;}
+  .langswitch a:hover{background:var(--panel2); color:var(--text);}
+  .langswitch span.current{background:var(--accent); color:#0f1115; font-weight:700;}
+  @media (max-width:860px){
+    .layout{flex-direction:column;}
+    nav.side{position:relative; width:auto; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:24px;} footer{padding:0 24px 40px;}
+  }
+</style>
+</head>
+<body>
+<div class="langswitch"><a href="../smftool.html">日本語</a><span class="current">English</span></div>
+<div class="layout">
+<nav class="side">
+  <h1><img src="../img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+  <div class="sub">FM/PCM Sound Driver Docs</div>
+  <a href="index.html">Overview &amp; Getting Started</a>
+  <a href="api.html">Public API Reference</a>
+  <a href="fmvoice.html">FM Voice Parameters</a>
+  <a href="pcmvoice.html">PCM Voice Parameters</a>
+  <a href="mmlformat.html">MML File Structure</a>
+  <a href="mmlcommands.html">MML Command Reference</a>
+  <a class="current" href="smftool.html">SMF Conversion Tool</a>
+  <a href="license.html">License</a>
+</nav>
+<main>
+
+<h1>SMF Conversion Tool (Smf2GoFMML)</h1>
+<p class="lead">A standalone command-line tool that reads a Standard MIDI File (SMF) and converts it
+into a go-fmml <code>.mml</code> file.</p>
+
+<div class="toc">
+<a href="#overview">Overview</a>
+<a href="#build">Building</a>
+<a href="#usage">Usage</a>
+<a href="#tags">Track-name tags</a>
+<a href="#conversion">What gets converted</a>
+<a href="#caveats">Caveats</a>
+</div>
+
+<h2 id="overview">Overview</h2>
+<p>
+<code>Smf2GoFMML</code> is a standalone command-line app under <code>tools/smf2gofmml</code>, separate
+from go-fmml's core (the FM/PCM synthesis engine and MML playback). It reads a Standard MIDI File
+(assumed to be Format 1), parses each track's notes, tempo, and track name, and writes out a
+<code>.mml</code> text file following go-fmml's own MML spec. It doesn't need go-fmml's audio engine
+(<code>oto/v3</code> etc.) at all - it only performs the file conversion.
+</p>
+<p>
+Treat the output as a <b>starting draft</b>, not a finished song. Anything an SMF file has no way of
+expressing - voice IDs, mute, reverb sends, loop settings, a conductor part, and so on - is filled
+in with fixed default values, so the expected workflow is to hand-edit the resulting
+<code>.mml</code> afterward, referring to the <a href="mmlformat.html">MML File Structure</a> and
+<a href="mmlcommands.html">MML Command Reference</a> pages, and pair it with voice files you author
+separately.
+</p>
+
+<h2 id="build">Building</h2>
+<p>From the repository's <code>tools/smf2gofmml</code> directory, build the executable straight
+into the <code>cmd</code> subfolder (the tool resolves its input/output folders relative to its own
+executable's location, so this placement matters).</p>
+<pre><code>cd tools/smf2gofmml
+go build -o cmd/Smf2GoFMML.exe .</code></pre>
+
+<h2 id="usage">Usage</h2>
+<p>Next to the built executable (<code>cmd/Smf2GoFMML.exe</code>) live an input <code>smf</code>
+folder and an output <code>convert</code> folder (created automatically if missing).</p>
+<pre><code># Run from inside the cmd folder
+cd tools/smf2gofmml/cmd
+
+# A bare file name is looked up under the sibling smf folder
+Smf2GoFMML.exe bgm1.mid          # resolves to ./smf/bgm1.mid
+
+# An absolute path is read as-is
+Smf2GoFMML.exe C:\path\to\bgm1.mid</code></pre>
+<table>
+<tr><th>Item</th><th>Details</th></tr>
+<tr><td>Argument</td><td>The path to the SMF file to convert - either a full path, or a bare file
+name resolved against the <code>smf</code> folder next to the executable.</td></tr>
+<tr><td>Output location</td><td>The <code>convert</code> folder next to the executable (created
+automatically if it doesn't exist).</td></tr>
+<tr><td>Output file name</td><td><code>&lt;song name&gt;.mml</code>. The song name comes from the
+SMF's sequence/track-name meta event (characters invalid in a Windows file name are replaced with
+<code>_</code>; falls back to <code>untitled</code> if none is found).</td></tr>
+<tr><td>On error</td><td>Prints the reason to the console and exits (e.g. the file can't be read, the
+SMF itself is malformed, or no track contains any note data).</td></tr>
+<tr><td>On warning</td><td>Conversion continues; details are printed to the console prefixed with
+<code>warning:</code> (e.g. a track skipped for exceeding a part-count limit).</td></tr>
+</table>
+
+<h2 id="tags">Track-name tags</h2>
+<p>Prefixing a track's name (its sequence/track-name meta event) with one of the following tags
+controls what kind of part it converts into.</p>
+<table>
+<tr><th>Tag</th><th>Converts to</th></tr>
+<tr><td><code>[FM]</code></td><td>An FM voice part (<code>[partN]</code>)</td></tr>
+<tr><td><code>[PCM long]</code></td><td>A PCM voice part, long type (<code>[pcmPartX]</code>,
+<code>partType: long</code>)</td></tr>
+<tr><td><code>[PCM oneShot]</code></td><td>A PCM voice part, oneShot type (<code>[pcmPartX]</code>,
+<code>partType: oneShot</code>)</td></tr>
+<tr><td>No tag</td><td>Treated as an FM voice part (the default)</td></tr>
+</table>
+<div class="note">
+Tag matching is case-insensitive, and whitespace anywhere inside the brackets (e.g.
+<code>[PCM oneShot ]</code> or <code>[ PCM  oneShot ]</code>) is ignored - a bit of inconsistency from
+hand-typed track names is tolerated. The words themselves still need to match
+(<code>PCM</code> / <code>long</code> / <code>oneShot</code>). The remainder of the track name (tag
+stripped) is automatically written as a comment (<code>#</code>) directly above that part's settings
+entry and body section in the output <code>.mml</code>.
+</div>
+<pre><code># Example track names
+[FM]Lead
+[PCM long]Strings
+[PCM oneShot]Drums
+Bass                # no tag -> treated as an FM voice part</code></pre>
+
+<h2 id="conversion">What gets converted</h2>
+
+<h3>The [global] section</h3>
+<table>
+<tr><th>Field</th><th>How it's derived</th></tr>
+<tr><td><code>tempo</code></td><td>The first tempo meta event found anywhere in the SMF (decimal part
+dropped). Defaults to <code>120</code> if none is found.</td></tr>
+<tr><td><code>sequenceID</code></td><td>The first track name (sequence name) found in the SMF, with
+any double-quote characters stripped. Defaults to <code>untitled</code> if none is found.</td></tr>
+<tr><td><code>loop</code></td><td>Always <code>false</code> (fixed default).</td></tr>
+<tr><td><code>volume</code></td><td>Always <code>100</code> (fixed default).</td></tr>
+<tr><td><code>reverb</code></td><td>Always <code>false</code> (fixed default).</td></tr>
+<tr><td><code>reverbType</code></td><td>Always <code>normal</code> (fixed default).</td></tr>
+<tr><td><code>reverbTime</code></td><td>Always <code>2.0</code> (fixed default).</td></tr>
+<tr><td><code>reverbLevel</code></td><td>Always <code>100</code> (fixed default).</td></tr>
+</table>
+
+<h3>Part assignment</h3>
+<ul>
+  <li>Following SMF track order, tracks are numbered per their tag: <b>FM voice parts get 1, 2,
+  3...16</b>, <b>PCM voice parts get A, B, C...P</b> (the FM and PCM counters are independent).</li>
+  <li>A track with no note data at all is skipped (not converted).</li>
+  <li>A track that would exceed either type's part limit (16 FM, 16 PCM) is skipped with a warning,
+  rather than aborting the whole conversion.</li>
+  <li>Every part is written with <code>voiceID: 0</code> and <code>mute: false</code> always (an SMF
+  has no concept of a go-fmml voice).</li>
+</ul>
+
+<h3>Part volume and pan</h3>
+<ul>
+  <li>If a track's early data includes CC (control change) <b>7 (volume)</b>, that value (0-127) is
+  used directly as the part's <code>volume</code>. Otherwise <code>100</code>.</li>
+  <li>If a track's early data includes CC <b>10 (pan)</b>, MIDI's 0-127 range is converted to
+  go-fmml's -16(left)-16(right) scale and used as <code>pan</code>. Otherwise <code>0</code> (center).</li>
+  <li>Volume/pan changes later in the track, plus other controller data (expression, pitch bend,
+  portamento, etc.), are ignored entirely - only the early value is used.</li>
+</ul>
+
+<h3>Notes → MML commands (FM / PCM long)</h3>
+<ul>
+  <li>The SMF's own time division is scaled to go-fmml's internal tick resolution.</li>
+  <li>Multiple notes sharing the exact same onset are grouped into a chord (<code>[ ]</code>). If a
+  chord's member notes have different lengths, the whole chord is unified to the longest one; the
+  other notes' own length information is discarded.</li>
+  <li>Each note's (or chord's) length - based on the gap to the next onset - is greedily decomposed
+  into go-fmml's MML length tokens (whole note, half, quarter, ... 32nd, dotted, triplet), longest
+  first. A length too long for one token is split across several, tied together with
+  <code>&amp;</code>. Any remainder shorter than a 32nd note is simply dropped.</li>
+  <li>Staccato (<code>Q</code>) is snapped to one of 4 levels (Q1=25%, Q2=50%, Q3=75%, Q4=100%),
+  based on the ratio between how long the note actually sounds (note-on to note-off) and the gap to
+  the next note.</li>
+  <li>A span with no sound is written as a rest (<code>R</code>).</li>
+  <li>Velocity is ignored; every note is written with a fixed <code>V127</code>.</li>
+</ul>
+
+<h3>Notes → MML commands (PCM oneShot)</h3>
+<ul>
+  <li>A oneShot track converts into the dedicated syntax described on the
+  <a href="mmlcommands.html#oneshot">PCM(oneShot) part commands</a> page: each distinct pitch used
+  gets its own independent <code>&lt;note name&gt;{ ... }</code> block, written as a timeline that
+  starts at tick 0 and runs in parallel with every other pitch's block.</li>
+  <li>Within each block, the same length-decomposition logic turns that pitch's onset gaps into a
+  sequence of triggers (<code>X</code>) and rests (<code>R</code>).</li>
+  <li>Every pitch's final trigger is extended to match the whole track's own last onset (rather than
+  each pitch tacking on its own independent padding) - this avoids inflating the song's overall loop
+  length with arbitrary per-pitch trailing silence.</li>
+</ul>
+
+<h2 id="caveats">Caveats</h2>
+<div class="warn">
+<b>The output is a draft, not a finished product.</b> Anything an SMF has no way to express - voice
+IDs, mute, solo, transpose, reverb send, a conductor part, loop settings - is written with fixed
+default values, never actually converted. Turning it into a real song requires hand-editing the
+resulting <code>.mml</code> against the <a href="mmlformat.html">MML File Structure</a> page, and
+pairing it with voice files you author using the
+<a href="fmvoice.html">FM Voice Parameters</a> / <a href="pcmvoice.html">PCM Voice Parameters</a>
+specs.
+</div>
+<ul>
+  <li>SMPTE-based time division (frames-per-second timing) is not supported.</li>
+  <li>The tool is written against Format 1 SMF files, per spec. Other formats may happen to parse
+  structurally, but only Format 1 is tested and supported.</li>
+  <li>Because the executable resolves its <code>smf</code>/<code>convert</code> folders relative to
+  its own path, copying just the executable elsewhere requires recreating that same
+  folder layout alongside it.</li>
+  <li>Characters invalid in a file name (<code>\ / : * ? " &lt; &gt; |</code>, etc.) found in the
+  source song name are replaced with an underscore (<code>_</code>) in the output file name.</li>
+</ul>
+
+</main>
+</div>
+<footer>
+<hr>
+<p>
+© 2026 <a href="https://megaak.com">MEGAAK SOFT</a> —
+This document is licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+</p>
+</footer>
+</body>
+</html>

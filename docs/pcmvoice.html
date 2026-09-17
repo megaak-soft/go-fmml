@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>PCM音色パラメータ仕様 - go-fmml</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#9aa3b2; --accent:#7aa2ff; --accent2:#ffb454;
+    --code-bg:#11141b; --table-head:#1d2129;
+    font-family: -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{line-height:1.8; font-size:15.5px;}
+  .layout{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{width:220px; flex:0 0 220px; padding:28px 16px; position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto; border-right:1px solid var(--border);}
+  nav.side h1{font-size:17px; margin:0 0 4px;}
+  nav.side .sub{font-size:11.5px; color:var(--muted); margin-bottom:20px;}
+  nav.side a{display:block; color:var(--muted); text-decoration:none; padding:7px 10px; border-radius:6px; font-size:13.5px;}
+  nav.side a:hover{background:var(--panel2); color:var(--text);}
+  nav.side a.current{background:var(--panel2); color:var(--accent); font-weight:600;}
+  main{flex:1; padding:36px 44px 80px; min-width:0;}
+  h1{font-size:28px; margin:0 0 6px;}
+  h2{font-size:20px; margin:44px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  h3{font-size:16px; margin:26px 0 10px; color:var(--accent);}
+  p{color:var(--text);}
+  .lead{color:var(--muted); font-size:16px;}
+  code{background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.92em; font-family: Consolas, "SF Mono", Menlo, monospace;}
+  pre{background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:16px 18px; overflow-x:auto; font-size:13px; line-height:1.6;}
+  pre code{background:none; border:none; padding:0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 22px; font-size:13.5px;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--table-head); color:var(--accent); font-weight:600;}
+  .note{background:var(--panel2); border-left:3px solid var(--accent2); padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  .compare{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0;}
+  .compare .card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 18px;}
+  .compare .card b{color:var(--accent2); display:block; margin-bottom:8px; font-size:15px;}
+  a{color:var(--accent);}
+  footer{max-width:1180px; margin:0 auto; padding:0 44px 60px 264px;}
+  footer hr{border:none; border-top:1px solid var(--border); margin:40px 0 18px;}
+  footer p{color:var(--muted); font-size:12.5px;}
+  @media (max-width:860px){
+    .layout{flex-direction:column;}
+    nav.side{position:relative; width:auto; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:24px;} footer{padding:0 24px 40px;}
+    .compare{grid-template-columns:1fr;}
+  }
+  .langswitch{position:fixed; top:16px; right:24px; z-index:50; display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px; font-size:12px; box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .langswitch a, .langswitch span{padding:4px 12px; border-radius:16px; text-decoration:none; color:var(--muted); font-weight:500;}
+  .langswitch a:hover{background:var(--panel2); color:var(--text);}
+  .langswitch span.current{background:var(--accent); color:#0f1115; font-weight:700;}
+</style>
+</head>
+<body>
+<div class="langswitch"><span class="current">日本語</span><a href="en/pcmvoice.html">English</a></div>
+<div class="layout">
+<nav class="side">
+  <h1><img src="img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+  <div class="sub">FM/PCM音源ドライバ ドキュメント</div>
+  <a href="index.html">概要・はじめに</a>
+  <a href="api.html">公開メソッド仕様</a>
+  <a href="fmvoice.html">FM音色パラメータ仕様</a>
+  <a class="current" href="pcmvoice.html">PCM音色パラメータ仕様</a>
+  <a href="mmlformat.html">MMLファイル構成仕様</a>
+  <a href="mmlcommands.html">MMLコマンド仕様</a>
+  <a href="smftool.html">SMF変換ツール</a>
+  <a href="license.html">ライセンス</a>
+</nav>
+<main>
+
+<h1>PCM音色パラメータ仕様</h1>
+<p class="lead">WAVサンプルを鳴らすPCM音色（音色）を定義するYAMLファイルの記載方法です。1ファイルに
+複数音色を定義できます。</p>
+
+<h2>ファイル形式</h2>
+<p>YAML形式。コメント行は<code>#</code>で表現し、空行・スペースのみの行は無視されます。
+<code>fileio.LoadPCMVoiceFile</code> / <code>LoadPCMVoiceFileFS</code> / <code>SetPCMVoiceData</code>
+のいずれかで読み込みます。読み込み時にYAML解析と同時に参照WAVファイルもメモリへデコードされます
+（同一WAVファイルは重複デコードせずキャッシュを再利用）。</p>
+
+<h2>voiceType: 2つのタイプ</h2>
+<div class="compare">
+<div class="card"><b>oneShot（ワンショット）</b>
+ドラムキットのように、複数のノートそれぞれに独立したWAVサンプルを割り当てて発音するタイプです。
+1音色につき最大16個の<code>voiceSetting</code>を持てます。ファイル自体にループ設定があっても無視
+され、常にワンショット（波形の最後まで）再生されます。<code>loop</code> / <code>baseNote</code> /
+<code>envelope</code> は無視されます。
+</div>
+<div class="card"><b>long（ロング）</b>
+ヴァイオリン等の持続音を想定したタイプです。<code>voiceSetting</code>は1個のみ。<code>baseNote</code>
+を起点に、鳴らすノートに応じて12音階でピッチが変化して再生されます。<code>note</code> /
+<code>volume</code> / <code>pan</code>（voiceSetting側）は無視され、代わりにパート設定側の
+volume/panが使われます。エンベロープ・LFO・ループ再生に対応します。
+</div>
+</div>
+
+<h2>共通パラメータ</h2>
+<table>
+<tr><th>キー</th><th>範囲・書式</th><th>説明</th></tr>
+<tr><td><code>voiceID</code></td><td>整数</td><td>音色を一意に識別するID。</td></tr>
+<tr><td><code>voiceType</code></td><td><code>oneShot</code> / <code>long</code></td><td>音色タイプ。
+未知の値はYAML自体のエラーとして扱われ、読み込みが中止されます。</td></tr>
+<tr><td><code>loop</code></td><td>true / false</td><td><b>longのみ有効。</b>trueかつWAVファイル自体
+に<code>smpl</code>チャンクのループ設定が含まれる場合はその区間をループ、含まれない場合は波形の
+先頭〜末尾をループします。falseの場合はWAV自体にループ設定があってもループ再生しません
+（oneShotでは常に無視）。</td></tr>
+<tr><td><code>lfo</code></td><td>true / false</td><td><b>longのみ有効</b>（Phase 8）。oneShotでは
+無視されます。未設定時はfalse。</td></tr>
+<tr><td><code>lfoDelay</code> / <code>lfoFade</code> / <code>lfoDepth</code> / <code>lfoHz</code></td>
+<td>FM音色と同じ</td><td>デフォルトはそれぞれ<code>0.4</code> / <code>0.5</code> / <code>30</code> /
+<code>6</code>。詳細は<a href="fmvoice.html">FM音色パラメータ仕様</a>参照。</td></tr>
+</table>
+
+<h2>voiceSetting</h2>
+<table>
+<tr><th>キー</th><th>oneShot</th><th>long</th><th>説明</th></tr>
+<tr><td><code>fileName</code></td><td>必須</td><td>必須</td><td>WAVファイル名（モノラル・44.1kHz
+のみ対応）。絶対パス指定、またはファイル名のみの場合はYAML自体と同一フォルダ（<code>LoadPCMVoiceFileFS</code>
+の場合は<code>fsys</code>ルートからの絶対パス、ファイル名のみならYAMLと同フォルダ）を探索します。</td></tr>
+<tr><td><code>note</code></td><td>必須（例: <code>C1</code>）</td><td>無視</td><td>このサンプルを
+発音させるノート名。1音色内で最大16個まで設定でき、ノートごとに異なるサンプルを割り当てます。</td></tr>
+<tr><td><code>baseNote</code></td><td>無視</td><td>必須（例: <code>A3</code>）</td><td>このサンプルが
+原音（無変換）で再生されるノート。未設定・不正値の場合は警告の上A4にフォールバックします。</td></tr>
+<tr><td><code>volume</code></td><td>0〜127</td><td>無視</td><td>そのサンプル単体の音量（oneShotは
+サンプルごとに個別ミックス可能）。</td></tr>
+<tr><td><code>pan</code></td><td>-16(左)〜16(右)</td><td>無視</td><td>そのサンプル単体のパン定位。
+0が中央、連続値（例: -7で少し左寄り）。</td></tr>
+<tr><td><code>envelope</code></td><td>無視</td><td><code>"attackRate, decay1Rate, sustainLevel, decay2Rate, releaseRate"</code></td>
+<td>FM音色のenvelopeと同一書式・同一意味。<a href="fmvoice.html#envelope">FM音色パラメータ仕様</a>
+参照。</td></tr>
+</table>
+
+<h2>設定例</h2>
+<pre><code>pcmVoice:
+  # ワンショットタイプ（ドラムキット）
+  - voiceID: 0
+    voiceType: oneShot
+    loop: false
+    voiceSetting:
+      - fileName: kick.wav
+        note: C1
+        volume: 100
+        pan: 0
+      - fileName: snare.wav
+        note: E1
+        volume: 100
+        pan: 0
+      - fileName: hat1.wav
+        note: F#1
+        volume: 100
+        pan: -16
+
+  # ロングタイプ（持続音、ループ・エンベロープ・LFO付き）
+  - voiceID: 1
+    voiceType: long
+    loop: true
+    lfo: true
+    lfoDelay: 0.3
+    lfoFade: 0.4
+    lfoHz: 7
+    voiceSetting:
+      - fileName: uhh.wav
+        baseNote: A3
+        envelope: "31, 1, 2, 6, 14"</code></pre>
+
+<h2>WAVファイル仕様</h2>
+<ul>
+  <li>モノラル・44.1kHzのみサポート。</li>
+  <li>ロングタイプのループは、WAVファイル自体に埋め込まれた<code>smpl</code>チャンクのループポイント
+  （ある場合）を優先して使用します。</li>
+  <li>同一WAVファイルが複数の音色・複数の読み込み呼び出しから参照されても、デコードは1回のみ行われ、
+  以降はメモリ上のキャッシュを再利用します（<code>memory.ClearPCMWaveCache</code>で明示的にクリア
+  可能）。</li>
+</ul>
+
+<div class="note">未定義・不正な値（軽微なもの）は警告ログを出力した上で0扱いにして解析を継続します。
+<code>voiceType</code>が不明な値、またはWAVファイルの読み込み自体に失敗した場合は致命的エラーとして
+読み込みが中止されます。</div>
+
+</main>
+</div>
+<footer>
+<hr>
+<p>
+© 2026 <a href="https://megaak.com">MEGAAK SOFT</a> —
+本ドキュメントは <a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank" rel="noopener">CC BY 4.0</a> の下でライセンスされています。
+</p>
+</footer>
+</body>
+</html>

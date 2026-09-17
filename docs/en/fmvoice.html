@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FM Voice Parameters - go-fmml</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#9aa3b2; --accent:#7aa2ff; --accent2:#ffb454;
+    --code-bg:#11141b; --table-head:#1d2129;
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{line-height:1.8; font-size:15.5px;}
+  .layout{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{width:220px; flex:0 0 220px; padding:28px 16px; position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto; border-right:1px solid var(--border);}
+  nav.side h1{font-size:17px; margin:0 0 4px;}
+  nav.side .sub{font-size:11.5px; color:var(--muted); margin-bottom:20px;}
+  nav.side a{display:block; color:var(--muted); text-decoration:none; padding:7px 10px; border-radius:6px; font-size:13.5px;}
+  nav.side a:hover{background:var(--panel2); color:var(--text);}
+  nav.side a.current{background:var(--panel2); color:var(--accent); font-weight:600;}
+  main{flex:1; padding:36px 44px 80px; min-width:0;}
+  h1{font-size:28px; margin:0 0 6px;}
+  h2{font-size:20px; margin:44px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  h3{font-size:16px; margin:26px 0 10px; color:var(--accent);}
+  p{color:var(--text);}
+  .lead{color:var(--muted); font-size:16px;}
+  code{background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.92em; font-family: Consolas, "SF Mono", Menlo, monospace;}
+  pre{background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:16px 18px; overflow-x:auto; font-size:13px; line-height:1.6;}
+  pre code{background:none; border:none; padding:0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 22px; font-size:13.5px;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--table-head); color:var(--accent); font-weight:600;}
+  .note{background:var(--panel2); border-left:3px solid var(--accent2); padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  a{color:var(--accent);}
+  .alg-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; margin:16px 0 8px;}
+  .alg-card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px 16px;}
+  .alg-card .alg-title{font-weight:700; color:var(--accent); font-size:14px; margin-bottom:6px;}
+  .alg-card .alg-desc{color:var(--muted); font-size:12.8px; margin-top:8px;}
+  .alg-card svg{display:block; margin:0 auto;}
+  .opbox rect{fill:var(--panel2); stroke:var(--border); stroke-width:1.5;}
+  .opbox.carrier rect{fill:rgba(255,180,84,0.14); stroke:var(--accent2); stroke-width:2;}
+  .opbox text{fill:var(--text); font-size:13px; font-family:Consolas,monospace; text-anchor:middle; dominant-baseline:middle;}
+  .edge{stroke:var(--muted); stroke-width:1.6; marker-end:url(#arrowhead);}
+  footer{max-width:1180px; margin:0 auto; padding:0 44px 60px 264px;}
+  footer hr{border:none; border-top:1px solid var(--border); margin:40px 0 18px;}
+  footer p{color:var(--muted); font-size:12.5px;}
+  .langswitch{position:fixed; top:16px; right:24px; z-index:50; display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px; font-size:12px; box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .langswitch a, .langswitch span{padding:4px 12px; border-radius:16px; text-decoration:none; color:var(--muted); font-weight:500;}
+  .langswitch a:hover{background:var(--panel2); color:var(--text);}
+  .langswitch span.current{background:var(--accent); color:#0f1115; font-weight:700;}
+  @media (max-width:860px){
+    .layout{flex-direction:column;}
+    nav.side{position:relative; width:auto; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:24px;} footer{padding:0 24px 40px;}
+  }
+</style>
+</head>
+<body>
+<div class="langswitch"><a href="../fmvoice.html">日本語</a><span class="current">English</span></div>
+<div class="layout">
+<nav class="side">
+  <h1><img src="../img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+  <div class="sub">FM/PCM Sound Driver Docs</div>
+  <a href="index.html">Overview &amp; Getting Started</a>
+  <a href="api.html">Public API Reference</a>
+  <a class="current" href="fmvoice.html">FM Voice Parameters</a>
+  <a href="pcmvoice.html">PCM Voice Parameters</a>
+  <a href="mmlformat.html">MML File Structure</a>
+  <a href="mmlcommands.html">MML Command Reference</a>
+  <a href="smftool.html">SMF Conversion Tool</a>
+  <a href="license.html">License</a>
+</nav>
+<main>
+
+<h1>FM Voice Parameters</h1>
+<p class="lead">How to write the YAML file that defines a 4-operator FM voice (音色). One file may
+define multiple voices.</p>
+
+<h2>File format</h2>
+<p>YAML format. Comment lines start with <code>#</code>; blank lines and whitespace-only lines are
+ignored. Load with one of <code>fileio.LoadFMVoiceFile</code> / <code>LoadFMVoiceFileFS</code> /
+<code>SetFMVoiceData</code>.</p>
+
+<pre><code>fmVoice:
+  - voiceID: 0
+    algorithm: 2
+    feedback: 20
+    lfo: true
+    lfoDelay: 0.3
+    lfoFade: 0.4
+    lfoDepth: 30
+    lfoHz: 7
+    operators:
+      - multiple: 1
+        totallevel: 127
+        detuneCents: 0
+        wave: W1
+        envelope: "11, 10, 0.6, 4, 12"
+      - multiple: 2
+        totallevel: 40
+        detuneCents: 0
+        wave: W1
+        envelope: "31, 12, 0.3, 4, 12"
+      - multiple: 1
+        totallevel: 30
+        detuneCents: 0
+        wave: W2
+        envelope: "31, 10, 0.5, 4, 12"
+      - multiple: 1
+        totallevel: 0
+        detuneCents: 0
+        wave: W2
+        envelope: "31, 8, 0.7, 2, 12"</code></pre>
+
+<h2>Voice parameters</h2>
+<table>
+<tr><th>Key</th><th>Range / format</th><th>Description</th></tr>
+<tr><td><code>voiceID</code></td><td>integer</td><td>Uniquely identifies this voice. Referenced by
+<code>[partSetting]</code>'s <code>voiceID</code> or by <code>RegisterVoice</code>.</td></tr>
+<tr><td><code>algorithm</code></td><td>integer 0-7</td><td>How the 4 operators are connected (see
+"Algorithm list" below).</td></tr>
+<tr><td><code>feedback</code></td><td>0-7</td><td>Self-feedback amount applied to operator 1 (OP1).
+Values above 7 are treated as 7.</td></tr>
+<tr><td><code>lfo</code></td><td>true / false</td><td>Enables/disables the vibrato LFO. Defaults to
+false if omitted (Phase 8).</td></tr>
+<tr><td><code>lfoDelay</code></td><td>seconds (0.1s steps)</td><td>Delay from note-on until the LFO
+starts. Default when omitted: <code>0.4</code>.</td></tr>
+<tr><td><code>lfoFade</code></td><td>seconds (0.1s steps)</td><td>Time from LFO start until it
+reaches full depth. Default when omitted: <code>0.5</code>.</td></tr>
+<tr><td><code>lfoDepth</code></td><td>cents (100 = one semitone)</td><td>LFO swing depth. Default
+when omitted: <code>30</code>.</td></tr>
+<tr><td><code>lfoHz</code></td><td>Hz</td><td>LFO oscillation rate. Default when omitted: <code>6</code>.</td></tr>
+</table>
+
+<h3>operators (fixed 4 entries, same fields for each)</h3>
+<table>
+<tr><th>Key</th><th>Range / format</th><th>Description</th></tr>
+<tr><td><code>multiple</code></td><td>positive float</td><td>Frequency ratio applied to the note's
+base frequency. A larger value produces a higher, more harmonic-sounding component. Not clamped.</td></tr>
+<tr><td><code>totallevel</code></td><td>0 (loudest) - 127 (silent)</td><td>This operator's output
+attenuation. On a carrier (an operator whose output is audible) this controls volume; on a modulator
+it controls modulation depth. Attenuates at roughly 0.75dB per step.</td></tr>
+<tr><td><code>detuneCents</code></td><td>cents (100 = one semitone)</td><td>Fine detune applied on top
+of <code>multiple</code>. Positive or negative.</td></tr>
+<tr><td><code>wave</code></td><td><code>W1</code>-<code>W8</code></td><td>The basic waveform (see
+"Basic waveforms" below). Omitted or invalid defaults to <code>W1</code> (sine).</td></tr>
+<tr><td><code>envelope</code></td><td><code>"attackRate, decay1Rate, sustainLevel, decay2Rate, releaseRate"</code>
+comma-separated string</td><td>See "Envelope" below.</td></tr>
+</table>
+
+<h3>envelope (5 fields)</h3>
+<table>
+<tr><th>Field (in order)</th><th>Range</th><th>Description</th></tr>
+<tr><td>attackRate</td><td>0-31</td><td>Speed of the rise from silence to full level. 0 never rises;
+31 is fastest.</td></tr>
+<tr><td>decay1Rate</td><td>0-31</td><td>Speed of decay from full level down to sustainLevel. 0 holds
+at full level indefinitely.</td></tr>
+<tr><td>sustainLevel</td><td>0.0-1.0</td><td>The level decay1 settles to.</td></tr>
+<tr><td>decay2Rate</td><td>0-31</td><td>Speed of the slow secondary decay from sustainLevel toward 0.
+0 sustains indefinitely without decaying.</td></tr>
+<tr><td>releaseRate</td><td>0-31</td><td>Speed of the fall to silence after note-off. 0 never falls
+(be careful on a carrier - the note would never stop sounding).</td></tr>
+</table>
+<div class="note">Rate values sit on a logarithmic <code>0-31</code> scale mapped to real time
+(roughly 8 seconds down to a few milliseconds). A smaller value is slower, a larger value is faster.</div>
+
+<h2>Basic waveforms (W1-W8)</h2>
+<p>The 8 basic waveforms selectable via <code>wave</code>. <code>phase</code> represents a 0-2π phase
+angle.</p>
+<table>
+<tr><th>Selector</th><th>Name</th><th>Waveform character</th></tr>
+<tr><td><code>W1</code></td><td>Sine wave</td><td>The full-cycle basic waveform. The backward-
+compatible default matching pre-Phase-5 voices.</td></tr>
+<tr><td><code>W2</code></td><td>Half-rectified sine</td><td>Only the positive (upper) half-cycle is
+kept; the negative (lower) half is clamped to 0.</td></tr>
+<tr><td><code>W3</code></td><td>Full-wave rectified sine</td><td>The negative (lower) half-cycle is
+mirrored into the positive (upper) side.</td></tr>
+<tr><td><code>W4</code></td><td>Half-rectified sine (half period)</td><td>A positive half-cycle in
+the first half of the period only; the second half is 0.</td></tr>
+<tr><td><code>W5</code></td><td>Sawtooth-like sine</td><td>A positive half-wave repeated twice at
+double frequency (half width).</td></tr>
+<tr><td><code>W6</code></td><td>Full-wave rectified (half period)</td><td>W3's humps packed twice as
+densely.</td></tr>
+<tr><td><code>W7</code></td><td>Positive full-wave rectified (polar)</td><td>A scaled-down, positively
+shifted version of W3.</td></tr>
+<tr><td><code>W8</code></td><td>Asymmetric sawtooth-like sine</td><td>W5's alternating-inversion
+counterpart.</td></tr>
+</table>
+
+<h2>Algorithm list (0-7)</h2>
+<p>Choose how the 4 operators (labeled OP1-OP4 in the diagrams, indices 0-3 internally) are connected.
+Arrows show the modulator→carrier direction; the orange-outlined boxes are that algorithm's
+"carriers" - the operators whose output is actually heard. Operator 1 (OP1) can always additionally
+receive self-feedback via <code>feedback</code>, regardless of algorithm.</p>
+
+<div class="alg-grid">
+
+<div class="alg-card"><div class="alg-title">algorithm: 0 — Full serial chain</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<defs><marker id="ea0" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9aa3b2"/></marker></defs>
+<g class="edge" marker-end="url(#ea0)">
+<line x1="74" y1="27" x2="138" y2="27"/>
+<line x1="172" y1="44" x2="172" y2="88"/>
+<line x1="138" y1="107" x2="76" y2="107"/>
+</g>
+<g class="opbox"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">A straight chain: OP1→OP2→OP3→OP4. Output = OP4. The strongest, most
+harmonically complex FM character of the eight.</div></div>
+
+<div class="alg-card"><div class="alg-title">algorithm: 1</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<defs><marker id="ea1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9aa3b2"/></marker></defs>
+<g class="edge" marker-end="url(#ea1)">
+<line x1="74" y1="44" x2="138" y2="90"/>
+<line x1="140" y1="44" x2="76" y2="90"/>
+<line x1="138" y1="107" x2="76" y2="107"/>
+</g>
+<g class="opbox"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">OP1→OP4, OP2→OP3→OP4. Output = OP4. Two modulator chains converge onto one
+carrier.</div></div>
+
+<div class="alg-card"><div class="alg-title">algorithm: 2</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<defs><marker id="ea2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9aa3b2"/></marker></defs>
+<g class="edge" marker-end="url(#ea2)">
+<line x1="76" y1="44" x2="142" y2="88"/>
+<line x1="140" y1="44" x2="76" y2="90"/>
+<line x1="138" y1="107" x2="76" y2="107"/>
+</g>
+<g class="opbox"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">OP1→OP4, OP2→OP3→OP4. Output = OP4. Similar to algorithm 1, but OP1 modulates
+OP4 directly (used by the sample voiceID:0).</div></div>
+
+<div class="alg-card"><div class="alg-title">algorithm: 3</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<defs><marker id="ea3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9aa3b2"/></marker></defs>
+<g class="edge" marker-end="url(#ea3)">
+<line x1="74" y1="27" x2="138" y2="27"/>
+<line x1="172" y1="44" x2="172" y2="88"/>
+<line x1="138" y1="107" x2="76" y2="107"/>
+</g>
+<g class="opbox"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">OP1→OP2→OP4, OP3→OP4. Output = OP4. Two modulator paths converge onto one
+carrier.</div></div>
+
+<div class="alg-card"><div class="alg-title">algorithm: 4 — Two parallel FM pairs</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<defs><marker id="ea4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9aa3b2"/></marker></defs>
+<g class="edge" marker-end="url(#ea4)">
+<line x1="74" y1="27" x2="138" y2="27"/>
+<line x1="74" y1="107" x2="138" y2="107"/>
+</g>
+<g class="opbox"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox carrier"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">(OP1→OP2) and (OP3→OP4) run independently in parallel. Output = OP2 + OP4. Sounds
+like two layered voices, adding thickness.</div></div>
+
+<div class="alg-card"><div class="alg-title">algorithm: 5 — One-to-many modulator</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<defs><marker id="ea5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9aa3b2"/></marker></defs>
+<g class="edge" marker-end="url(#ea5)">
+<line x1="74" y1="27" x2="138" y2="27"/>
+<line x1="60" y1="44" x2="60" y2="90"/>
+<line x1="76" y1="40" x2="142" y2="88"/>
+</g>
+<g class="opbox"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox carrier"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox carrier"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">OP1 modulates OP2, OP3, and OP4 simultaneously. Output = OP2 + OP3 + OP4. A
+single modulator wobbling several carriers at once.</div></div>
+
+<div class="alg-card"><div class="alg-title">algorithm: 6</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<defs><marker id="ea6" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#9aa3b2"/></marker></defs>
+<g class="edge" marker-end="url(#ea6)">
+<line x1="74" y1="27" x2="138" y2="27"/>
+</g>
+<g class="opbox"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox carrier"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox carrier"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">Only OP1→OP2 has a modulation link; OP3 and OP4 are fully independent carriers.
+Output = OP2 + OP3 + OP4.</div></div>
+
+<div class="alg-card"><div class="alg-title">algorithm: 7 — Fully independent (additive)</div>
+<svg viewBox="0 0 260 150" width="260" height="150">
+<g class="opbox carrier"><rect x="10" y="10" width="64" height="34" rx="6"/><text x="42" y="28">OP1</text></g>
+<g class="opbox carrier"><rect x="140" y="10" width="64" height="34" rx="6"/><text x="172" y="28">OP2</text></g>
+<g class="opbox carrier"><rect x="10" y="90" width="64" height="34" rx="6"/><text x="42" y="108">OP3</text></g>
+<g class="opbox carrier"><rect x="140" y="90" width="64" height="34" rx="6"/><text x="172" y="108">OP4</text></g>
+</svg>
+<div class="alg-desc">No modulation connections. All 4 operators are independent carriers. Output =
+OP1 + OP2 + OP3 + OP4. Suits organ-like additive sounds.</div></div>
+
+</div>
+
+<h2>Example</h2>
+<p>A bass/lead-leaning voice (a mostly-serial algorithm 4, with the carrier-side operators set to W2):</p>
+<pre><code>fmVoice:
+  - voiceID: 0
+    algorithm: 4
+    feedback: 20
+    operators:
+      - multiple: 20
+        totallevel: 20
+        detuneCents: 0
+        wave: W1
+        envelope: "28, 10, 0.6, 4, 20"
+      - multiple: 2
+        totallevel: 40
+        detuneCents: 0
+        wave: W1
+        envelope: "31, 12, 0.3, 4, 20"
+      - multiple: 1
+        totallevel: 30
+        detuneCents: 0
+        wave: W2
+        envelope: "31, 10, 0.5, 4, 20"
+      - multiple: 1
+        totallevel: 0
+        detuneCents: 0
+        wave: W2
+        envelope: "31, 8, 0.7, 2, 20"</code></pre>
+
+<div class="note">An undefined or invalid value (a minor YAML parse issue) is logged as a warning and
+treated as 0, and parsing continues. Loading is aborted with a fatal error only if the YAML itself is
+invalid.</div>
+
+</main>
+</div>
+<footer>
+<hr>
+<p>
+© 2026 <a href="https://megaak.com">MEGAAK SOFT</a> —
+This document is licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+</p>
+</footer>
+</body>
+</html>

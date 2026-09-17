@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MML File Structure - go-fmml</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#9aa3b2; --accent:#7aa2ff; --accent2:#ffb454;
+    --code-bg:#11141b; --table-head:#1d2129;
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{line-height:1.8; font-size:15.5px;}
+  .layout{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{width:220px; flex:0 0 220px; padding:28px 16px; position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto; border-right:1px solid var(--border);}
+  nav.side h1{font-size:17px; margin:0 0 4px;}
+  nav.side .sub{font-size:11.5px; color:var(--muted); margin-bottom:20px;}
+  nav.side a{display:block; color:var(--muted); text-decoration:none; padding:7px 10px; border-radius:6px; font-size:13.5px;}
+  nav.side a:hover{background:var(--panel2); color:var(--text);}
+  nav.side a.current{background:var(--panel2); color:var(--accent); font-weight:600;}
+  main{flex:1; padding:36px 44px 80px; min-width:0;}
+  h1{font-size:28px; margin:0 0 6px;}
+  h2{font-size:20px; margin:44px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  h3{font-size:16px; margin:26px 0 10px; color:var(--accent);}
+  p{color:var(--text);}
+  .lead{color:var(--muted); font-size:16px;}
+  code{background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.92em; font-family: Consolas, "SF Mono", Menlo, monospace;}
+  pre{background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:16px 18px; overflow-x:auto; font-size:13px; line-height:1.6;}
+  pre code{background:none; border:none; padding:0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 22px; font-size:13.3px;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--table-head); color:var(--accent); font-weight:600;}
+  .note{background:var(--panel2); border-left:3px solid var(--accent2); padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  .toc{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin:18px 0;}
+  .toc a{display:inline-block; margin:3px 10px 3px 0; font-size:13px;}
+  a{color:var(--accent);}
+  footer{max-width:1180px; margin:0 auto; padding:0 44px 60px 264px;}
+  footer hr{border:none; border-top:1px solid var(--border); margin:40px 0 18px;}
+  footer p{color:var(--muted); font-size:12.5px;}
+  .langswitch{position:fixed; top:16px; right:24px; z-index:50; display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px; font-size:12px; box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .langswitch a, .langswitch span{padding:4px 12px; border-radius:16px; text-decoration:none; color:var(--muted); font-weight:500;}
+  .langswitch a:hover{background:var(--panel2); color:var(--text);}
+  .langswitch span.current{background:var(--accent); color:#0f1115; font-weight:700;}
+  @media (max-width:860px){
+    .layout{flex-direction:column;}
+    nav.side{position:relative; width:auto; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:24px;} footer{padding:0 24px 40px;}
+  }
+</style>
+</head>
+<body>
+<div class="langswitch"><a href="../mmlformat.html">日本語</a><span class="current">English</span></div>
+<div class="layout">
+<nav class="side">
+  <h1><img src="../img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+  <div class="sub">FM/PCM Sound Driver Docs</div>
+  <a href="index.html">Overview &amp; Getting Started</a>
+  <a href="api.html">Public API Reference</a>
+  <a href="fmvoice.html">FM Voice Parameters</a>
+  <a href="pcmvoice.html">PCM Voice Parameters</a>
+  <a class="current" href="mmlformat.html">MML File Structure</a>
+  <a href="mmlcommands.html">MML Command Reference</a>
+  <a href="smftool.html">SMF Conversion Tool</a>
+  <a href="license.html">License</a>
+</nav>
+<main>
+
+<h1>MML File Structure</h1>
+<p class="lead">The overall structure of a <code>.mml</code> file describing one song's sequence data,
+and the parameters for each of its sections. For the performance commands themselves (notes, rests,
+note notation, etc.), see the <a href="mmlcommands.html">MML Command Reference</a>.</p>
+
+<div class="toc">
+<a href="#header">File header</a>
+<a href="#global">[global]</a>
+<a href="#conductor">[conductor]</a>
+<a href="#partsetting">[partSetting]</a>
+<a href="#pcmpartsetting">[pcmPartSetting]</a>
+<a href="#partbody">[partN] / [pcmPartX] body</a>
+</div>
+
+<h2 id="header">Overall file structure</h2>
+<ul>
+  <li>A plain text file in go-fmml's own format, with the extension <code>.mml</code>.</li>
+  <li>Comment lines start with <code>#</code> (leading whitespace is ignored). Blank or
+  whitespace-only lines are also ignored.</li>
+  <li>The very first line must be the header string: <code>[GoFMML File]</code></li>
+  <li>Followed by the <code>[global]</code>, <code>[conductor]</code>, <code>[partSetting]</code>,
+  <code>[pcmPartSetting]</code> sections and each part's own body
+  (<code>[part1]</code>-<code>[part16]</code>, <code>[pcmPartA]</code>-<code>[pcmPartP]</code>).</li>
+  <li>Load with one of <code>fileio.LoadMMLFile</code> / <code>LoadMMLFileFS</code> /
+  <code>SetMMLTextData</code>.</li>
+</ul>
+
+<h2 id="global">[global] — song-wide initial settings</h2>
+<p>Written in YAML format.</p>
+<pre><code>[global]
+  tempo: 120
+  sequenceID: SampleMML
+  loop: false
+  volume: 100
+  startOffset: 1
+  reverb: false
+  reverbType: normal
+  reverbTime: 1.5
+  reverbLevel: 50</code></pre>
+<table>
+<tr><th>Key</th><th>Range / format</th><th>Description</th></tr>
+<tr><td><code>tempo</code></td><td>numeric (BPM)</td><td>The song's tempo. If <code>[conductor]</code>
+also specifies a tempo, that one takes priority.</td></tr>
+<tr><td><code>sequenceID</code></td><td>string</td><td>Uniquely identifies this sequence - the key
+passed to <code>player.Play</code> and similar.</td></tr>
+<tr><td><code>loop</code></td><td>true / false</td><td>Whether reaching the song's end loops back to
+the start (or the <code>startOffset</code> position / a jump point). The longest of all parts is
+treated as the song's own end.</td></tr>
+<tr><td><code>volume</code></td><td>0-127</td><td>The engine-wide master volume. Full volume if
+omitted.</td></tr>
+<tr><td><code>startOffset</code></td><td>number of whole notes (integer)</td><td>Playback start
+offset. E.g. <code>1</code> skips one whole note's worth of time on every part before playback
+begins (non-note commands within the skipped span are still processed internally). Omitted or
+invalid is ignored. When <code>loop: true</code> and no jump point is set, this offset position is
+also where a loop rewinds to.</td></tr>
+<tr><td><code>reverb</code></td><td>true / false</td><td>Whether to use the master reverb. Bypassed
+if false or omitted.</td></tr>
+<tr><td><code>reverbType</code></td><td><code>simple</code> / <code>normal</code></td><td>
+<code>simple</code> = Schroeder type (lightweight), <code>normal</code> = FDN type (higher quality,
+somewhat more expensive).</td></tr>
+<tr><td><code>reverbTime</code></td><td>0.5-3.0 seconds (one decimal place)</td><td>The reverb's decay
+time. 0.5 or below bypasses reverb; above 3.0 is clamped to 3.0.</td></tr>
+<tr><td><code>reverbLevel</code></td><td>0-127</td><td>Reverb volume relative to the dry signal. 0 =
+dry only.</td></tr>
+</table>
+<div class="note">Even if individual parts set a <code>reverbSend</code>, no reverb is applied at all
+while <code>[global]</code>'s <code>reverb</code> is false.</div>
+
+<h2 id="conductor">[conductor] — conductor part (optional)</h2>
+<p>A special part that sets a loop's jump point and tempo changes over the course of the song. At
+most one per song; it doesn't need to be present at all.</p>
+<pre><code>[conductor]
+[conductorPart]
+  R1 R1 J
+  T120 R4 T115 R4 T110 R4
+  T80
+[conductorPartEnd]</code></pre>
+<table>
+<tr><th>Command</th><th>Description</th></tr>
+<tr><td><code>T</code>number</td><td>Changes tempo to the given value (decimal point ignored). At the
+very start of the part this takes priority over <code>[global]</code>'s <code>tempo</code>. Placed
+mid-song, it changes the whole song's tempo (every part) from that point on.</td></tr>
+<tr><td><code>R</code>+number</td><td>A rest (elapsed time for the conductor part itself). 2 = half
+note, <code>.</code> for a dot, 6/12/24 for triplets.</td></tr>
+<tr><td><code>J</code></td><td>A jump point. When <code>[global]</code>'s <code>loop: true</code>,
+reaching the song's end loops back to this jump point rather than to the start (or
+<code>startOffset</code>) - useful for a one-time intro followed by a repeating section. At most one
+is honored per song (any additional ones are ignored).</td></tr>
+</table>
+
+<h2 id="partsetting">[partSetting] — FM voice part initial setup</h2>
+<p>YAML format. Up to 16 parts (<code>partNo: 1</code>-<code>16</code>).</p>
+<pre><code>[partSetting]
+part:
+  - partNo: 1
+    voiceID: 0
+    volume: 100
+    pan: 0
+    reverbSend: 30
+    transpose: -12
+    mute: false
+    solo: false</code></pre>
+<table>
+<tr><th>Key</th><th>Range / format</th><th>Description</th></tr>
+<tr><td><code>partNo</code></td><td>1-16</td><td>Part number, matching a <code>[partN]</code> body
+section.</td></tr>
+<tr><td><code>voiceID</code></td><td>integer</td><td>The FM voice to use. If the ID isn't in memory,
+a default voice is substituted.</td></tr>
+<tr><td><code>volume</code></td><td>0-127</td><td>Part volume.</td></tr>
+<tr><td><code>pan</code></td><td>-16(left)-16(right)</td><td>Pan. 0 = center.</td></tr>
+<tr><td><code>reverbSend</code></td><td>0-127</td><td>Send level to the master reverb. 127 = 100% wet.</td></tr>
+<tr><td><code>transpose</code></td><td>-36-36 (semitones)</td><td>Transposes the whole part. 1 =
+semitone, 12 = one octave. Omitted or out-of-range is ignored.</td></tr>
+<tr><td><code>mute</code></td><td>true / false</td><td>true silences this part. Omitted or invalid is
+treated as false.</td></tr>
+<tr><td><code>solo</code></td><td>true / false</td><td>true plays only this part (and any other
+solo:true parts), automatically muting every other part (mainly a debugging aid).</td></tr>
+</table>
+
+<h2 id="pcmpartsetting">[pcmPartSetting] — PCM voice part initial setup</h2>
+<p>YAML format. To distinguish PCM parts from FM parts, part numbers use A-P (up to 16 parts).</p>
+<pre><code>[pcmPartSetting]
+pcmPart:
+  - partNo: A
+    voiceID: 0
+    partType: oneShot
+    volume: 60
+    pan: 0
+    transpose: 2
+    mute: false
+    solo: false
+    reverbSend: "C1: 5, E1: 30, F#1: 15"
+
+  - partNo: B
+    voiceID: 1
+    partType: long
+    volume: 100
+    pan: 5
+    reverbSend: 40</code></pre>
+<table>
+<tr><th>Key</th><th>Range / format</th><th>Description</th></tr>
+<tr><td><code>partNo</code></td><td>A-P</td><td>Part number, matching a <code>[pcmPartX]</code> body
+section.</td></tr>
+<tr><td><code>voiceID</code></td><td>integer</td><td>The PCM voice to use.</td></tr>
+<tr><td><code>partType</code></td><td><code>oneShot</code> / <code>long</code></td><td>Must match
+that PCM voice's own <code>voiceType</code> (an oneShot part can only use an oneShot voice).</td></tr>
+<tr><td><code>volume</code></td><td>0-127</td><td>Part volume.</td></tr>
+<tr><td><code>pan</code></td><td>-16-16</td><td>Pan. <b>Ignored when partType is oneShot</b> - the
+voice's own per-sample <code>voiceSetting</code> pan takes priority instead. Used normally for
+long.</td></tr>
+<tr><td><code>transpose</code></td><td>-36-36</td><td>Same as an FM part. Only meaningful for
+long.</td></tr>
+<tr><td><code>mute</code></td><td>true / false</td><td>Same as an FM part.</td></tr>
+<tr><td><code>solo</code></td><td>true / false</td><td>Same as an FM part.</td></tr>
+<tr><td><code>reverbSend</code></td><td>depends on partType (see below)</td><td>Send level to the
+master reverb.</td></tr>
+</table>
+<div class="note">
+<b>The <code>reverbSend</code> format differs by partType:</b><br>
+For <code>partType: long</code>, a single number (0-127), same as an FM part.<br>
+For <code>partType: oneShot</code>, since each WAV-mapped note needs its own send level, it's written
+as a string (in double quotes): <code>"note: level, note: level, ..."</code>. A note not listed gets
+no reverb (send 0).
+</div>
+
+<h2 id="partbody">Each part's body: [partN] / [pcmPartX]</h2>
+<table>
+<tr><th>Section</th><th>Start tag</th><th>End tag</th><th>Target</th></tr>
+<tr><td>FM voice part</td><td><code>[part1]</code>-<code>[part16]</code></td>
+<td><code>[part1End]</code>-<code>[part16End]</code></td><td>Sounded by the FM synthesis core</td></tr>
+<tr><td>PCM voice part</td><td><code>[pcmPartA]</code>-<code>[pcmPartP]</code></td>
+<td><code>[pcmPartAEnd]</code>-<code>[pcmPartPEnd]</code></td><td>Sounded from WAV samples (command
+grammar differs by oneShot vs. long voiceType)</td></tr>
+</table>
+<p>Between a start tag and its end tag you may freely add line breaks and whitespace within the
+performance commands (MML text) - they are stripped out and the whole block is parsed as one
+continuous command stream. See the <a href="mmlcommands.html">MML Command Reference</a> for the
+commands themselves.</p>
+
+<pre><code>[part1]
+  O3 C4D4E4F#4
+  G8A8B8
+  O4 C16C#16D16e16 F2R4G8
+[part1End]</code></pre>
+
+</main>
+</div>
+<footer>
+<hr>
+<p>
+© 2026 <a href="https://megaak.com">MEGAAK SOFT</a> —
+This document is licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+</p>
+</footer>
+</body>
+</html>

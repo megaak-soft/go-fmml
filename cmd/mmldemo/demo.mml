@@ -1,0 +1,119 @@
+[GoFMML File]
+
+[global]
+  tempo: 130
+  sequenceID: demo
+  loop: false
+  volume: 100
+  startOffset: 1
+  reverb: true
+  reverbType: normal
+  reverbTime: 2.0
+  reverbLevel: 100
+
+[partSetting]
+part:
+  # Bass
+  - partNo: 1
+    voiceID: 0
+    volume: 40
+    pan: 0
+    transpose: -24
+    mute: false
+
+  # Code
+  - partNo: 2
+    voiceID: 1
+    volume: 55
+    pan: -16
+    transpose: -12
+    mute: false
+    solo: false
+
+  # Melody
+  - partNo: 3
+    voiceID: 2
+    volume: 71
+    pan: 0
+    transpose: -12
+    reverbSend: 35
+    mute: false
+
+# Bass
+[part1]
+  V127 R1 Q3 O3E4 Q4 O4E8 Q3 O3E4 Q3 O3E8 Q4 O4E8 Q3 O3E4 Q4 O3E8 Q4 O4E8 Q1 O3E4 Q4 O3E8 Q3 O4E4 Q2
+  O3G8 Q2 O3G8 Q2 O3G8 Q2 O3G8 Q3 O3G8 Q2 O3G8 Q3 O3G8 Q3 O3A4 Q2 O3A8 Q2 O3A8 Q2 O3A8 Q2 O3A8 Q2 O3A8
+  Q3 O3A4 Q1 O4E2. Q4 O4D8 Q4 O4E16. R1
+[part1End]
+
+# Code
+[part2]
+  V127 R1 [O4G#2.O4B2.O5E2.] & Q4 [O4G#8O4B8O5E8] Q4 [O5E2O4B2O4A2] [O4G#2O5E2O4B2] & Q4
+  [O4G#8O5E8O4B8] Q4 [O5D2O4B2O4G2] Q4 [O4G8O5D8O4B8] Q2 [O4G4O4B4O5D4] Q3 [O4A4.O5E4.O5C#4.] Q3
+  [O4A4O5E4O5C#4] Q3 [O4A4O5E4O5C#4] Q3 [O4A4O5C#4O5E4] Q1 [O5G#2.O5E2.O4B2.] Q4 [O4A8O5F#8O5D8] Q4
+  [O4B16.O5G#16.O5E16.]
+[part2End]
+
+# Melody
+[part3]
+  V127 R1 Q4 O6 _1/16 E4 Q4 O5B8 Q4 O6D4 Q4 O5B4 Q4 O5A4 Q4 O5B4 O5E2 \3_4  Q3 O5 E8 Q4 O5G4 Q4 O5D8 Q4 O5E4 Q4
+  O5G4 Q4 O5 _1/16 A4 Q4 O5E8 Q4 O5G8 Q4 O5A8 Q4 O5B8 Q4 O5A8 Q4 O5B8 Q4 O6 D8 Q4 O6 _2/16 E4 Q4 O6D4 Q4 O5B8 Q4 O5A8
+  Q4 O5G8 Q4 O5E16.
+[part3End]
+
+[pcmPartSetting]
+pcmPart:
+  # Drum
+  - partNo: A
+    voiceID: 0
+    partType: oneShot
+    volume: 127
+    pan: 0
+    mute: false
+    reverbSend: "C2: 5, D2: 60"    
+
+
+  # Guiter
+  - partNo: B
+    voiceID: 1
+    partType: long
+    volume: 30
+    pan: 16
+    mute: false
+
+  # DistGuiter
+  - partNo: C
+    voiceID: 2
+    partType: long
+    volume: 65
+    pan: 16
+    mute: false
+
+# Drum
+[pcmPartA]
+  C2{ V127 R1 X4. X4 X4 X4 X4 X4 X4. X2 X4. X4 X4. X2 X2 X8 X4 X32 }
+
+  D2{ V127 R1 R4 X2 X2 X2 X2 X2 X2 X4. X8 X8 X4. X2 X8 X32 }
+
+  D#2{ V127 X4 X4 X4 X1. R1. R1. R2 R8 }
+
+  F#2{ V127 R1 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X8
+  X8 X8 X8 X8 X8 X8 X8 X8 X8 X8 X32 }
+
+  A2{ V127 R1. R1. R1. R1 R4 X8 }
+
+  C#3{ V127 R1 X1. R2 X2. R8 X1 R8 X2. X8 X32 }
+
+  D3{ V127 R1. R1. R1. R8 X1 X4 }
+[pcmPartAEnd]
+
+# Guiter
+[pcmPartB]
+  V127 R1 Q4 O3E4 Q4 O2B8 Q4 O3E4 Q4 O3B4 Q4 O3A4 Q4 O3G#4 Q4 O3E4 Q4 O3D8 O3E8. & Q4 O3E32.
+[pcmPartBEnd]
+
+# DistGuiter
+[pcmPartC]
+  V127 R1. R1. O4G2 & Q4 O4G8 Q4 O4G4 Q4 O4A2. Q4 O4A4. Q1 O4E2. Q4 O4D8 Q4 O4E16.
+[pcmPartCEnd]
+

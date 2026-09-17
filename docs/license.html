@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ライセンス - go-fmml</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#9aa3b2; --accent:#7aa2ff; --accent2:#ffb454;
+    --code-bg:#11141b; --table-head:#1d2129;
+    font-family: -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{line-height:1.8; font-size:15.5px;}
+  .layout{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{width:220px; flex:0 0 220px; padding:28px 16px; position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto; border-right:1px solid var(--border);}
+  nav.side h1{font-size:17px; margin:0 0 4px;}
+  nav.side .sub{font-size:11.5px; color:var(--muted); margin-bottom:20px;}
+  nav.side a{display:block; color:var(--muted); text-decoration:none; padding:7px 10px; border-radius:6px; font-size:13.5px;}
+  nav.side a:hover{background:var(--panel2); color:var(--text);}
+  nav.side a.current{background:var(--panel2); color:var(--accent); font-weight:600;}
+  main{flex:1; padding:36px 44px 80px; min-width:0;}
+  h1{font-size:28px; margin:0 0 6px;}
+  h2{font-size:20px; margin:44px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  h3{font-size:15px; margin:0; font-family:Consolas,"SF Mono",Menlo,monospace; color:var(--accent2);}
+  p{color:var(--text);}
+  .lead{color:var(--muted); font-size:16px;}
+  code{background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.92em; font-family: Consolas, "SF Mono", Menlo, monospace;}
+  pre{background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:14px 16px; overflow-x:auto; font-size:12.8px; line-height:1.6; margin:10px 0 0;}
+  pre code{background:none; border:none; padding:0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 22px; font-size:13.8px;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--table-head); color:var(--accent); font-weight:600;}
+  .card-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; margin:18px 0 8px;}
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 18px;}
+  .card b{color:var(--accent);}
+  .card p{margin:6px 0 0; color:var(--muted); font-size:13.5px;}
+  .method{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin:14px 0;}
+  .note{background:var(--panel2); border-left:3px solid var(--accent2); padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  .warn{background:var(--panel2); border-left:3px solid #ff6b6b; padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  a{color:var(--accent);}
+  footer{max-width:1180px; margin:0 auto; padding:0 44px 60px 264px;}
+  footer hr{border:none; border-top:1px solid var(--border); margin:40px 0 18px;}
+  footer p{color:var(--muted); font-size:12.5px;}
+  @media (max-width:860px){
+    .layout{flex-direction:column;}
+    nav.side{position:relative; width:auto; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:24px;} footer{padding:0 24px 40px;}
+  }
+  .langswitch{position:fixed; top:16px; right:24px; z-index:50; display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px; font-size:12px; box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .langswitch a, .langswitch span{padding:4px 12px; border-radius:16px; text-decoration:none; color:var(--muted); font-weight:500;}
+  .langswitch a:hover{background:var(--panel2); color:var(--text);}
+  .langswitch span.current{background:var(--accent); color:#0f1115; font-weight:700;}
+</style>
+</head>
+<body>
+<div class="langswitch"><span class="current">日本語</span><a href="en/license.html">English</a></div>
+<div class="layout">
+<nav class="side">
+  <h1><img src="img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+  <div class="sub">FM/PCM音源ドライバ ドキュメント</div>
+  <a href="index.html">概要・はじめに</a>
+  <a href="api.html">公開メソッド仕様</a>
+  <a href="fmvoice.html">FM音色パラメータ仕様</a>
+  <a href="pcmvoice.html">PCM音色パラメータ仕様</a>
+  <a href="mmlformat.html">MMLファイル構成仕様</a>
+  <a href="mmlcommands.html">MMLコマンド仕様</a>
+  <a href="smftool.html">SMF変換ツール</a>
+  <a class="current" href="license.html">ライセンス</a>
+</nav>
+<main>
+
+<h1>ライセンス</h1>
+<p class="lead">go-fmml は、<b>ソースコード</b>と<b>ドキュメント</b>で異なるライセンスを採用する
+デュアルライセンス構成です。利用する対象によって適用されるライセンスが異なりますのでご注意くださ
+い。</p>
+
+<table>
+<tr><th>対象</th><th>ライセンス</th><th>ファイル</th></tr>
+<tr><td>ソースコード（<code>docs/</code>を除くGoソースコード全体、および冒頭にMITヘッダーが付与された全ファイル）</td><td>MIT License</td><td><code>LICENSE</code></td></tr>
+<tr><td>ドキュメント（本ページを含む<code>docs/</code>配下のHTML、<code>README.md</code>、<code>CLAUDE.md</code>）</td><td>CC BY 4.0</td><td><code>LICENSE-DOCS</code></td></tr>
+</table>
+
+<h2>ソースコードのライセンス：MIT License</h2>
+<p>
+go-fmml のソースコードは<b>MITライセンス</b>で提供されています。著作権表示とライセンス全文を保持
+することだけを条件に、以下のようにほぼ無制限に利用できます。
+</p>
+<div class="card-grid">
+  <div class="card"><b>商用利用</b><p>商用プロダクト（有償ゲーム等）への利用可。ロイヤリティ等の
+  支払いは不要です。</p></div>
+  <div class="card"><b>組み込み</b><p>自作ゲームやツールにライブラリとしてそのまま組み込み可能です。</p></div>
+  <div class="card"><b>改変</b><p>ソースコードを自由に改変・カスタマイズできます。</p></div>
+  <div class="card"><b>再配布</b><p>改変の有無を問わず、ソースコード・バイナリともに再配布可能です。</p></div>
+  <div class="card"><b>非公開化</b><p>改変版のソースコードを公開する義務はありません（コピーレフト
+  ではありません）。</p></div>
+  <div class="card"><b>無保証</b><p>「現状のまま」提供され、著作権者は本ソフトウェアに起因する損害
+  について一切の責任を負いません。</p></div>
+</div>
+<p>
+条件は、頒布物に <b>著作権表示とライセンス全文</b>（<code>LICENSE</code>）を含めることのみです。
+ゲーム本体のクレジット画面やREADME等、利用者にとって合理的な場所に記載する形で構いません。
+</p>
+<p>
+ライセンス全文（日本語参考訳・英語正文）はリポジトリ同梱の <a href="../LICENSE">LICENSE</a>
+ファイルを参照してください。
+</p>
+
+<h2>AI実装におけるGPL汚染排除の取り組み</h2>
+<p>
+go-fmml は <a href="https://www.anthropic.com/claude-code" target="_blank" rel="noopener">Claude
+Code</a> を用いた仕様書駆動開発（Spec-Driven Development）で実装されています。AIによるコード生成
+は、学習データに含まれるOSSコード片の影響を受け、GPL等の<b>コピーレフトライセンス</b>に由来する
+実装パターンが意図せず混入してしまう「ライセンス汚染」のリスクが一般に指摘されています。
+</p>
+<p>
+go-fmml では、この種のIPリスクを避けるため、開発仕様書（<code>CLAUDE.md</code>）に以下のコーディ
+ングルールを明記し、コード生成のたびにAI自身へこれらのルール遵守をセルフチェックさせる運用で開発
+しています。
+</p>
+<div class="card-grid">
+  <div class="card"><b>直接複製の禁止</b><p>公開リポジトリに由来すると思われる逐語的なコード・コメ
+  ント・独自性の高いドキュメント構造をそのまま出力しない。</p></div>
+  <div class="card"><b>GPL的パターンの回避</b><p>GPLライセンスのプロジェクトに特有の、過度に具体的
+  な実装ロジック・変数名・コーディングイディオムを再現しない。</p></div>
+  <div class="card"><b>代替実装の採用</b><p>標準的な言語イディオムや、MIT/Apache系OSSに広く見られ
+  る一般的なパターン、あるいはゼロから設計したアルゴリズムを用いて同等の機能を実現する。</p></div>
+  <div class="card"><b>クリーンルーム的アプローチ</b><p>周知のアルゴリズムやプロトコルを実装する際
+  は機能的な等価性のみに着目し、構造・変数命名・実装細部は独自に構築する。</p></div>
+</div>
+<div class="warn">
+この取り組みは開発プロセス上の予防策であり、特定のOSSプロジェクトとのコード非類似性を法的に保証
+するものではありません。ライセンス上のリスクを完全に排除するものではない点にご留意ください。
+</div>
+
+<h2>サードパーティライブラリのライセンス表記</h2>
+<p>
+go-fmml は内部で以下のOSSライブラリに依存しています（間接依存を含む）。各ライブラリの著作権はそ
+れぞれの著作者に帰属し、go-fmml のMITライセンスとは独立してそれぞれのライセンス条件が適用されま
+す。
+</p>
+<table>
+<tr><th>ライブラリ</th><th>用途</th><th>ライセンス</th></tr>
+<tr><td><code>github.com/ebitengine/oto/v3</code></td><td>クロスプラットフォーム音声出力</td><td>Apache License 2.0</td></tr>
+<tr><td><code>github.com/ebitengine/purego</code>（間接依存）</td><td>oto/v3 が利用するcgo不使用のOS API呼び出し</td><td>Apache License 2.0</td></tr>
+<tr><td><code>gopkg.in/yaml.v3</code></td><td>FM/PCM音色パラメータファイルのYAML解析</td><td>MIT License / Apache License 2.0（デュアルライセンス）</td></tr>
+</table>
+
+<h2>ドキュメントのライセンス：CC BY 4.0</h2>
+<div class="note">
+<b>本ページを含むドキュメント一式はMITライセンスの対象外です</b><br>
+本ページ、および <code>CLAUDE.md</code>・<code>README.md</code>・<code>docs/</code>配下の全HTML
+ドキュメントは、上記のソースコード用MITライセンスとは<b>別の</b>ライセンスである
+<a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank" rel="noopener">Creative
+Commons Attribution 4.0 International（CC BY 4.0）</a>の下で提供されています。
+</div>
+<p>
+CC BY 4.0 では、著作者（MEGAAK SOFT）へのクレジット表示（Attribution）と、変更があった場合はその
+旨の明示を条件に、商用利用を含め自由に複製・再配布・翻案（改変・二次利用）が可能です。ライセンス
+が許諾する行為を制限するような追加の法的・技術的制約を課すことはできません。
+</p>
+<p>
+全文は <a href="../LICENSE-DOCS">LICENSE-DOCS</a> を参照してください。
+</p>
+
+</main>
+</div>
+<footer>
+<hr>
+<p>
+© 2026 <a href="https://megaak.com">MEGAAK SOFT</a> —
+本ドキュメントは <a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank" rel="noopener">CC BY 4.0</a> の下でライセンスされています。
+</p>
+</footer>
+</body>
+</html>

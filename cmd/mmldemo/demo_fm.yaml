@@ -1,0 +1,72 @@
+fmVoice:
+  # Bass
+  - voiceID: 0
+    algorithm: 3
+    feedback: 7
+    operators:
+      - multiple: 1
+        totallevel: 20
+        detuneCents: 0
+        envelope: "28, 12, 0.2, 20, 15"
+      - multiple: 2
+        totallevel: 15
+        detuneCents: 0
+        envelope: "30, 15, 0.2, 20, 15"
+      - multiple: 1
+        totallevel: 5
+        detuneCents: 0
+        envelope: "31, 10, 0.2, 10, 15"
+      - multiple: 2
+        totallevel: 0
+        detuneCents: 0
+        envelope: "31, 8, 0.7, 5, 20"
+
+  # Code synth
+  - voiceID: 1
+    algorithm: 6
+    feedback: 5
+    operators:
+      - multiple: 1
+        totallevel: 10
+        detuneCents: 0
+        envelope: "31, 16, 0.8, 10, 18"
+      - multiple: 2
+        totallevel: 5
+        detuneCents: 5
+        envelope: "23, 17, 0.6, 3, 16"
+      - multiple: 1
+        totallevel: 2
+        detuneCents: 0
+        envelope: "23, 22, 0.3, 15, 16"
+      - multiple: 2
+        totallevel: 5
+        detuneCents: 0
+        envelope: "23, 16, 0.6, 5, 16"
+
+  # Melody synth
+  - voiceID: 2
+    algorithm: 5
+    feedback: 4
+    lfo: true
+    lfoDelay: 0.3
+    lfoFade: 0.3
+    lfoDepth: 25
+    lfoHz: 7
+
+    operators:
+      - multiple: 1
+        totallevel: 13
+        detuneCents: 12
+        envelope: "30, 11, 0.2, 10, 20"
+      - multiple: 2
+        totallevel: 15
+        detuneCents: 12
+        envelope: "27, 10, 0.8, 5, 14"
+      - multiple: 2
+        totallevel: 0
+        detuneCents: 12
+        envelope: "27, 14, 0.8, 5, 14"
+      - multiple: 1
+        totallevel: 15
+        detuneCents: 12
+        envelope: "27, 10, 0.8, 5, 14"

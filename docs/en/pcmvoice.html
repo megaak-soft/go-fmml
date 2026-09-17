@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PCM Voice Parameters - go-fmml</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#9aa3b2; --accent:#7aa2ff; --accent2:#ffb454;
+    --code-bg:#11141b; --table-head:#1d2129;
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{line-height:1.8; font-size:15.5px;}
+  .layout{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{width:220px; flex:0 0 220px; padding:28px 16px; position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto; border-right:1px solid var(--border);}
+  nav.side h1{font-size:17px; margin:0 0 4px;}
+  nav.side .sub{font-size:11.5px; color:var(--muted); margin-bottom:20px;}
+  nav.side a{display:block; color:var(--muted); text-decoration:none; padding:7px 10px; border-radius:6px; font-size:13.5px;}
+  nav.side a:hover{background:var(--panel2); color:var(--text);}
+  nav.side a.current{background:var(--panel2); color:var(--accent); font-weight:600;}
+  main{flex:1; padding:36px 44px 80px; min-width:0;}
+  h1{font-size:28px; margin:0 0 6px;}
+  h2{font-size:20px; margin:44px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  h3{font-size:16px; margin:26px 0 10px; color:var(--accent);}
+  p{color:var(--text);}
+  .lead{color:var(--muted); font-size:16px;}
+  code{background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.92em; font-family: Consolas, "SF Mono", Menlo, monospace;}
+  pre{background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:16px 18px; overflow-x:auto; font-size:13px; line-height:1.6;}
+  pre code{background:none; border:none; padding:0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 22px; font-size:13.5px;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--table-head); color:var(--accent); font-weight:600;}
+  .note{background:var(--panel2); border-left:3px solid var(--accent2); padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  .compare{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0;}
+  .compare .card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 18px;}
+  .compare .card b{color:var(--accent2); display:block; margin-bottom:8px; font-size:15px;}
+  a{color:var(--accent);}
+  footer{max-width:1180px; margin:0 auto; padding:0 44px 60px 264px;}
+  footer hr{border:none; border-top:1px solid var(--border); margin:40px 0 18px;}
+  footer p{color:var(--muted); font-size:12.5px;}
+  .langswitch{position:fixed; top:16px; right:24px; z-index:50; display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px; font-size:12px; box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .langswitch a, .langswitch span{padding:4px 12px; border-radius:16px; text-decoration:none; color:var(--muted); font-weight:500;}
+  .langswitch a:hover{background:var(--panel2); color:var(--text);}
+  .langswitch span.current{background:var(--accent); color:#0f1115; font-weight:700;}
+  @media (max-width:860px){
+    .layout{flex-direction:column;}
+    nav.side{position:relative; width:auto; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:24px;} footer{padding:0 24px 40px;}
+    .compare{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="langswitch"><a href="../pcmvoice.html">日本語</a><span class="current">English</span></div>
+<div class="layout">
+<nav class="side">
+  <h1><img src="../img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+  <div class="sub">FM/PCM Sound Driver Docs</div>
+  <a href="index.html">Overview &amp; Getting Started</a>
+  <a href="api.html">Public API Reference</a>
+  <a href="fmvoice.html">FM Voice Parameters</a>
+  <a class="current" href="pcmvoice.html">PCM Voice Parameters</a>
+  <a href="mmlformat.html">MML File Structure</a>
+  <a href="mmlcommands.html">MML Command Reference</a>
+  <a href="smftool.html">SMF Conversion Tool</a>
+  <a href="license.html">License</a>
+</nav>
+<main>
+
+<h1>PCM Voice Parameters</h1>
+<p class="lead">How to write the YAML file that defines a PCM voice (音色) playing back WAV samples.
+One file may define multiple voices.</p>
+
+<h2>File format</h2>
+<p>YAML format. Comment lines start with <code>#</code>; blank lines and whitespace-only lines are
+ignored. Load with one of <code>fileio.LoadPCMVoiceFile</code> / <code>LoadPCMVoiceFileFS</code> /
+<code>SetPCMVoiceData</code>. Every referenced WAV file is decoded into memory at the same time the
+YAML itself is parsed (the same WAV file is never decoded twice - its cache is reused).</p>
+
+<h2>voiceType: two kinds</h2>
+<div class="compare">
+<div class="card"><b>oneShot</b>
+A drum-kit-style voice: an independent WAV sample is assigned to each of several notes. Up to 16
+<code>voiceSetting</code> entries per voice. Any loop metadata in the file itself is ignored - it
+always plays as a one-shot, through to the sample's own natural end. <code>loop</code> /
+<code>baseNote</code> / <code>envelope</code> are ignored.
+</div>
+<div class="card"><b>long</b>
+For sustained sounds like a violin. Exactly one <code>voiceSetting</code>. Playback pitch-shifts
+across the 12-tone scale relative to <code>baseNote</code> depending on the note played.
+<code>note</code> / <code>volume</code> / <code>pan</code> (on the voiceSetting side) are ignored -
+the assigned part's own volume/pan are used instead. Supports envelope, LFO, and looped playback.
+</div>
+</div>
+
+<h2>Common parameters</h2>
+<table>
+<tr><th>Key</th><th>Range / format</th><th>Description</th></tr>
+<tr><td><code>voiceID</code></td><td>integer</td><td>Uniquely identifies this voice.</td></tr>
+<tr><td><code>voiceType</code></td><td><code>oneShot</code> / <code>long</code></td><td>The voice
+type. An unrecognized value is treated as a YAML-level error and aborts loading.</td></tr>
+<tr><td><code>loop</code></td><td>true / false</td><td><b>Only meaningful for long.</b> If true and
+the WAV file itself contains <code>smpl</code>-chunk loop points, that region is looped; if it has
+none, the whole file (start to end) is looped instead. If false, playback never loops regardless of
+what the WAV file itself specifies (always ignored for oneShot).</td></tr>
+<tr><td><code>lfo</code></td><td>true / false</td><td><b>Only meaningful for long</b> (Phase 8).
+Ignored for oneShot. Defaults to false if omitted.</td></tr>
+<tr><td><code>lfoDelay</code> / <code>lfoFade</code> / <code>lfoDepth</code> / <code>lfoHz</code></td>
+<td>Same as FM voices</td><td>Defaults: <code>0.4</code> / <code>0.5</code> / <code>30</code> /
+<code>6</code> respectively. See <a href="fmvoice.html">FM Voice Parameters</a> for details.</td></tr>
+</table>
+
+<h2>voiceSetting</h2>
+<table>
+<tr><th>Key</th><th>oneShot</th><th>long</th><th>Description</th></tr>
+<tr><td><code>fileName</code></td><td>required</td><td>required</td><td>The WAV file name (mono,
+44.1kHz only). Either an absolute path, or - if just a bare file name - resolved relative to the YAML
+file's own directory (for <code>LoadPCMVoiceFileFS</code>, an absolute path from <code>fsys</code>'s
+root, or the YAML's own directory within <code>fsys</code> for a bare name).</td></tr>
+<tr><td><code>note</code></td><td>required (e.g. <code>C1</code>)</td><td>ignored</td><td>The note
+name that triggers this sample. Up to 16 per voice, each mapped to a different sample.</td></tr>
+<tr><td><code>baseNote</code></td><td>ignored</td><td>required (e.g. <code>A3</code>)</td><td>The
+note this sample plays back at its original (untransposed) pitch. Missing/invalid falls back to A4
+with a warning.</td></tr>
+<tr><td><code>volume</code></td><td>0-127</td><td>ignored</td><td>This sample's own volume (each
+oneShot sample can be mixed independently).</td></tr>
+<tr><td><code>pan</code></td><td>-16(left)-16(right)</td><td>ignored</td><td>This sample's own pan.
+0 = center, continuous (e.g. -7 = slightly left).</td></tr>
+<tr><td><code>envelope</code></td><td>ignored</td><td><code>"attackRate, decay1Rate, sustainLevel, decay2Rate, releaseRate"</code></td>
+<td>Same format and meaning as an FM voice's envelope. See
+<a href="fmvoice.html#envelope">FM Voice Parameters</a>.</td></tr>
+</table>
+
+<h2>Example</h2>
+<pre><code>pcmVoice:
+  # oneShot type (drum kit)
+  - voiceID: 0
+    voiceType: oneShot
+    loop: false
+    voiceSetting:
+      - fileName: kick.wav
+        note: C1
+        volume: 100
+        pan: 0
+      - fileName: snare.wav
+        note: E1
+        volume: 100
+        pan: 0
+      - fileName: hat1.wav
+        note: F#1
+        volume: 100
+        pan: -16
+
+  # long type (sustained, with looping, envelope, and LFO)
+  - voiceID: 1
+    voiceType: long
+    loop: true
+    lfo: true
+    lfoDelay: 0.3
+    lfoFade: 0.4
+    lfoHz: 7
+    voiceSetting:
+      - fileName: uhh.wav
+        baseNote: A3
+        envelope: "31, 1, 2, 6, 14"</code></pre>
+
+<h2>WAV file requirements</h2>
+<ul>
+  <li>Mono, 44.1kHz only.</li>
+  <li>Looping on a long voice prefers loop points embedded in the WAV file's own
+  <code>smpl</code> chunk, when present.</li>
+  <li>When the same WAV file is referenced by multiple voices or multiple load calls, it is decoded
+  only once; the in-memory cache is reused afterward (explicitly clearable via
+  <code>memory.ClearPCMWaveCache</code>).</li>
+</ul>
+
+<div class="note">An undefined or invalid value (a minor issue) is logged as a warning and treated as
+0, and parsing continues. An unrecognized <code>voiceType</code>, or any WAV file failing to load, is
+a fatal error that aborts loading.</div>
+
+</main>
+</div>
+<footer>
+<hr>
+<p>
+© 2026 <a href="https://megaak.com">MEGAAK SOFT</a> —
+This document is licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+</p>
+</footer>
+</body>
+</html>

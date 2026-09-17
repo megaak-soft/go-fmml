@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Public API Reference - go-fmml</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#9aa3b2; --accent:#7aa2ff; --accent2:#ffb454;
+    --code-bg:#11141b; --table-head:#1d2129;
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{line-height:1.8; font-size:15.5px;}
+  .layout{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{width:220px; flex:0 0 220px; padding:28px 16px; position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto; border-right:1px solid var(--border);}
+  nav.side h1{font-size:17px; margin:0 0 4px;}
+  nav.side .sub{font-size:11.5px; color:var(--muted); margin-bottom:20px;}
+  nav.side a{display:block; color:var(--muted); text-decoration:none; padding:7px 10px; border-radius:6px; font-size:13.5px;}
+  nav.side a:hover{background:var(--panel2); color:var(--text);}
+  nav.side a.current{background:var(--panel2); color:var(--accent); font-weight:600;}
+  main{flex:1; padding:36px 44px 80px; min-width:0;}
+  h1{font-size:28px; margin:0 0 6px;}
+  h2{font-size:20px; margin:44px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  h3{font-size:15px; margin:0; font-family:Consolas,"SF Mono",Menlo,monospace; color:var(--accent2);}
+  p{color:var(--text);}
+  .lead{color:var(--muted); font-size:16px;}
+  code{background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.92em; font-family: Consolas, "SF Mono", Menlo, monospace;}
+  pre{background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:14px 16px; overflow-x:auto; font-size:12.8px; line-height:1.6; margin:10px 0 0;}
+  pre code{background:none; border:none; padding:0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 22px; font-size:13.8px;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--table-head); color:var(--accent); font-weight:600;}
+  .method{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin:14px 0;}
+  .method .badge{display:inline-block; font-size:10.5px; padding:2px 8px; border-radius:20px; background:var(--panel2); color:var(--muted); border:1px solid var(--border); margin-left:10px; vertical-align:middle;}
+  .method p{color:var(--muted); font-size:13.8px; margin:10px 0 0;}
+  .note{background:var(--panel2); border-left:3px solid var(--accent2); padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  a{color:var(--accent);}
+  footer{max-width:1180px; margin:0 auto; padding:0 44px 60px 264px;}
+  footer hr{border:none; border-top:1px solid var(--border); margin:40px 0 18px;}
+  footer p{color:var(--muted); font-size:12.5px;}
+  .langswitch{position:fixed; top:16px; right:24px; z-index:50; display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px; font-size:12px; box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .langswitch a, .langswitch span{padding:4px 12px; border-radius:16px; text-decoration:none; color:var(--muted); font-weight:500;}
+  .langswitch a:hover{background:var(--panel2); color:var(--text);}
+  .langswitch span.current{background:var(--accent); color:#0f1115; font-weight:700;}
+  @media (max-width:860px){
+    .layout{flex-direction:column;}
+    nav.side{position:relative; width:auto; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:24px;} footer{padding:0 24px 40px;}
+  }
+</style>
+</head>
+<body>
+<div class="langswitch"><a href="../api.html">日本語</a><span class="current">English</span></div>
+<div class="layout">
+<nav class="side">
+  <h1><img src="../img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+  <div class="sub">FM/PCM Sound Driver Docs</div>
+  <a href="index.html">Overview &amp; Getting Started</a>
+  <a class="current" href="api.html">Public API Reference</a>
+  <a href="fmvoice.html">FM Voice Parameters</a>
+  <a href="pcmvoice.html">PCM Voice Parameters</a>
+  <a href="mmlformat.html">MML File Structure</a>
+  <a href="mmlcommands.html">MML Command Reference</a>
+  <a href="smftool.html">SMF Conversion Tool</a>
+  <a href="license.html">License</a>
+</nav>
+<main>
+
+<h1>Public API Reference</h1>
+<p class="lead">The public functions and methods you call to use go-fmml from your application.</p>
+
+<p>For typical BGM playback you only ever need three groups: <b>① File loading</b> →
+② create an engine with <code>fmcore.NewEngine</code> → <b>③ Playback control</b>. The
+<b>④ FM/PCM core low-level API</b> is for triggering single notes directly without MML, or for
+building your own sequencer.</p>
+
+<h2>① File loading <code style="font-size:12px;">package fileio</code></h2>
+
+<div class="method"><h3>fileio.LoadFMVoiceFile(path string) error</h3><span class="badge">FM voice</span>
+<p>Reads and parses the FM voice parameter YAML file at the given absolute path and registers it in
+memory. Minor parse issues are logged as warnings and parsing continues; an <code>error</code> is
+returned only for a fatal error (e.g. the YAML itself being invalid).</p></div>
+
+<div class="method"><h3>fileio.LoadFMVoiceFileFS(fsys embed.FS, path string) error</h3><span class="badge">FM voice / embed</span>
+<p>The <code>embed.FS</code> counterpart of <code>LoadFMVoiceFile</code>, for reading FM voice files
+embedded into the game binary via <code>go:embed</code>.</p></div>
+
+<div class="method"><h3>fileio.LoadPCMVoiceFile(path string) error</h3><span class="badge">PCM voice</span>
+<p>Reads the PCM voice parameter YAML file at the given absolute path, and also loads every WAV file
+its settings reference, registering the result in memory. If a <code>voiceSetting</code>'s
+<code>fileName</code> is a bare file name with no path, it is resolved relative to the YAML file's
+own directory. Returns an <code>error</code> if any referenced WAV file fails to load, too.</p></div>
+
+<div class="method"><h3>fileio.LoadPCMVoiceFileFS(fsys embed.FS, path string) error</h3><span class="badge">PCM voice / embed</span>
+<p>The <code>embed.FS</code> counterpart of <code>LoadPCMVoiceFile</code>. <code>fileName</code>
+paths are resolved relative to <code>fsys</code>'s own root.</p></div>
+
+<div class="method"><h3>fileio.LoadMMLFile(path string) error</h3><span class="badge">MML</span>
+<p>Reads and parses the <code>.mml</code> sequence file at the given absolute path and registers it
+in memory under its <code>[global]</code> <code>sequenceID</code>.</p></div>
+
+<div class="method"><h3>fileio.LoadMMLFileFS(fsys embed.FS, path string) error</h3><span class="badge">MML / embed</span>
+<p>The <code>embed.FS</code> counterpart of <code>LoadMMLFile</code>.</p></div>
+
+<div class="method"><h3>fileio.SetMMLTextData(data string) error</h3><span class="badge">MML / string</span>
+<p>Loads MML data supplied directly as a Go string (e.g. a backtick-quoted multi-line literal)
+instead of from a file (Phase 7). Processing afterward is identical to <code>LoadMMLFile</code>.</p></div>
+
+<div class="method"><h3>fileio.SetFMVoiceData(data string) error</h3><span class="badge">FM voice / string</span>
+<p>Loads FM voice parameter data in the same YAML format, supplied directly as a Go string (Phase 7).</p></div>
+
+<div class="method"><h3>fileio.SetPCMVoiceData(data string) error</h3><span class="badge">PCM voice / string</span>
+<p>Loads PCM voice parameter data in the same YAML format, supplied directly as a Go string
+(Phase 7). Relative paths for referenced WAV files are resolved against the process's current
+working directory.</p></div>
+
+<div class="note">
+<b>WAV loading efficiency</b> (Phase 7): <code>LoadPCMVoiceFile</code> / <code>LoadPCMVoiceFileFS</code> /
+<code>SetPCMVoiceData</code> all reuse an already-cached WAV file (by resolved path) instead of
+decoding it again.
+</div>
+
+<h2>② Memory management <code style="font-size:12px;">package memory</code></h2>
+
+<div class="method"><h3>memory.ClearVoices()</h3><span class="badge">FM voice</span>
+<p>Removes every registered FM voice from memory.</p></div>
+<div class="method"><h3>memory.ClearPCMVoices()</h3><span class="badge">PCM voice</span>
+<p>Removes every registered PCM voice from memory (the decoded waveform cache itself is untouched).</p></div>
+<div class="method"><h3>memory.ClearPCMWaveCache()</h3><span class="badge">PCM waveform / Phase 7</span>
+<p>Clears the entire cache of decoded WAV waveforms, freeing that memory. This is separate from
+<code>ClearPCMVoices</code>, which clears voice (音色) definitions, not the raw waveform data they
+reference.</p></div>
+<div class="method"><h3>memory.ClearSequences()</h3><span class="badge">Sequence</span>
+<p>Removes every loaded sequence (parsed MML data) from memory.</p></div>
+
+<h2>③ Playback control <code style="font-size:12px;">package player</code></h2>
+
+<div class="method"><h3>player.Play(engine Engine, sequenceID string, onComplete func()) error</h3><span class="badge">Playback</span>
+<p>Starts asynchronous playback of a loaded sequence (the caller is never blocked). Anything already
+playing is stopped first. When a non-looping song finishes playing through to its end,
+<code>onComplete</code> (if non-nil) is called exactly once from a background goroutine. If the
+sequence's <code>[global]</code> has <code>startOffset</code> set, playback begins at that position.</p></div>
+
+<div class="method"><h3>player.SkipPlay(engine Engine, sequenceID string, seekSeconds float64, onComplete func()) error</h3><span class="badge">Playback</span>
+<p>Same as <code>Play</code>, but starts playback <code>seekSeconds</code> seconds into the song
+instead of at the beginning. If that position falls in the middle of a note, playback rewinds to
+that note's own start.</p></div>
+
+<div class="method"><h3>player.FadeInPlay(engine Engine, sequenceID string, fadeSeconds float64, onComplete func()) error</h3><span class="badge">Playback / Fade</span>
+<p>Starts at volume 0 and glides smoothly up to <code>[global]</code>'s volume over
+<code>fadeSeconds</code> while playing.</p></div>
+
+<div class="method"><h3>player.FadeOutPlay(engine Engine, sequenceID string, fadeSeconds float64, onComplete func()) error</h3><span class="badge">Playback / Fade</span>
+<p>Begins fading out <code>fadeSeconds</code> seconds before the song's end, timed to reach volume 0
+exactly as the song ends. A <code>loop: true</code> song has no automatic fade-out (behaves exactly
+like <code>Play</code>).</p></div>
+
+<div class="method"><h3>player.FadeInOutPlay(engine Engine, sequenceID string, fadeSeconds float64, onComplete func()) error</h3><span class="badge">Playback / Fade</span>
+<p>Combines <code>FadeInPlay</code> and <code>FadeOutPlay</code>.</p></div>
+
+<div class="method"><h3>player.FadeOut(fadeSeconds float64) error</h3><span class="badge">Fade</span>
+<p>Fades the currently playing sequence's master volume down to 0 over <code>fadeSeconds</code>,
+starting from any moment, and stops playback once it reaches 0. Unlike <code>FadeOutPlay</code>'s
+automatic end-of-song fade, this can be called explicitly at any time and applies even to a
+<code>loop: true</code> song.</p></div>
+
+<div class="method"><h3>player.SetMasterVolume(engine Engine, volume float64)</h3><span class="badge">Volume</span>
+<p>Overwrites the master volume with a real value on the same 0-127 scale as <code>[global]</code>'s
+volume. If called during playback it glides smoothly over about 0.3 seconds; otherwise it takes
+effect immediately.</p></div>
+
+<div class="method"><h3>player.SetMasterVolumePercent(engine Engine, percent float64)</h3><span class="badge">Volume</span>
+<p>Sets the master volume as a percentage, where 100 equals the most recently loaded sequence's own
+<code>[global]</code> volume value (50 = half that volume). The same smooth-glide-during-playback
+behavior as <code>SetMasterVolume</code> applies.</p></div>
+
+<div class="method"><h3>player.Pause() error</h3><span class="badge">Playback control</span>
+<p>Pauses the currently playing sequence in place (with a short fade-out to avoid a click). Returns
+an error if nothing is playing.</p></div>
+
+<div class="method"><h3>player.Resume() error</h3><span class="badge">Playback control</span>
+<p>Resumes a sequence previously paused with <code>Pause</code>. If playback was paused mid-note, it
+rewinds to that note's own start before resuming.</p></div>
+
+<div class="method"><h3>player.Stop() error</h3><span class="badge">Playback control</span>
+<p>Halts the currently playing (or paused) sequence entirely.</p></div>
+
+<div class="method"><h3>player.IsPlaying() bool</h3><span class="badge">State query</span>
+<p>Reports whether a sequence is actively playing right now (false while paused or when nothing has
+ever played).</p></div>
+
+<div class="method"><h3>player.Rewind() error</h3><span class="badge">Playback control</span>
+<p>Resets playback position to the very start (tick 0). If playback is active, it restarts from the
+beginning immediately; if paused, the next <code>Resume</code> will start from the beginning.</p></div>
+
+<h2>④ FM/PCM core low-level API <code style="font-size:12px;">package fmcore</code></h2>
+<p class="lead" style="font-size:13.5px;">Use these when you want to control voice registration and
+note-triggering directly in code, without going through MML. <code>fmcore.Engine</code> contains both
+the FM and PCM sound cores.</p>
+
+<div class="method"><h3>fmcore.NewEngine(sampleRate int) (*Engine, error)</h3><span class="badge">Init</span>
+<p>Opens an audio output device (initializing an <code>oto/v3</code> context internally) and creates
+an engine at the given sample rate.</p></div>
+
+<div class="method"><h3>fmcore.NewEngineWithoutOutput(sampleRate int) *Engine</h3><span class="badge">Init</span>
+<p>Creates an engine without opening an audio device. Since <code>*Engine</code> itself implements
+<code>io.Reader</code>, it can be registered as a player on an <code>oto.Context</code> your app
+already owns.</p></div>
+
+<div class="method"><h3>(*Engine) RegisterVoice(id VoiceID, voice Voice)</h3><span class="badge">Voice registration</span>
+<p>Registers an FM voice's parameters (operators, envelopes, algorithm) under an ID, in memory.</p></div>
+
+<div class="method"><h3>(*Engine) SetPart(id PartID, voice VoiceID, volume, pan float64) error</h3><span class="badge">Part setup</span>
+<p>Assigns a voice ID, volume, and pan to a given sounding part.</p></div>
+
+<div class="method"><h3>(*Engine) NoteOnRow(partID PartID, noteNumber uint8, durationMs int, velocity uint8) (NoteID, error)</h3><span class="badge">Note-on</span>
+<p>Triggers a note using a raw note number, duration in ms, and velocity. Returns a note ID
+immediately; the note itself continues sounding asynchronously.</p></div>
+
+<div class="method"><h3>(*Engine) NoteOn(partID PartID, noteName string, noteType string, sustain int, velocity uint8) (NoteID, error)</h3><span class="badge">Note-on</span>
+<p>The abstracted counterpart: takes a note name like <code>"C#5"</code>, a note-type name like
+<code>"NOTE4"</code>, a sustain percentage, and a velocity, converting internally to a note number
+and duration in ms.</p></div>
+
+<div class="method"><h3>(*Engine) RegisterPCMVoice(id pcmcore.VoiceID, voice pcmcore.Voice)</h3><span class="badge">PCM voice registration</span>
+<p>Registers a PCM voice (oneShot or long).</p></div>
+
+<div class="method"><h3>(*Engine) SetPCMPart(id pcmcore.PartID, voice pcmcore.VoiceID, volume, pan float64) error</h3><span class="badge">PCM part setup</span>
+<p>Assigns a voice, volume, and pan to a given PCM part ('A' through 'P').</p></div>
+
+<div class="method"><h3>(*Engine) SetMasterVolume(volume float64) / SetMasterVolumeSmooth(target, rampSeconds float64)</h3><span class="badge">Volume</span>
+<p>Sets the engine-wide master volume (0.0-1.0), instantly or with a smooth ramp. The
+<code>player</code> package's volume API is a wrapper over these.</p></div>
+
+<div class="method"><h3>(*Engine) SetReverb(enabled bool, kind string, timeSeconds, level float64) / SetPartReverbSend(id PartID, send float64)</h3><span class="badge">Reverb</span>
+<p>Enables/configures the master reverb (type: <code>"simple"</code> = Schroeder, <code>"normal"</code>
+= FDN, plus reverb time and level), and sets a per-part send level.</p></div>
+
+<div class="method"><h3>(*Engine) Close() error</h3><span class="badge">Shutdown</span>
+<p>Closes the audio output device (when opened via <code>NewEngine</code>).</p></div>
+
+<p class="note">The above is an excerpt of the main methods intended to be called directly from an
+application. The <code>Schedule*</code> methods (<code>ScheduleNoteOn</code> and similar - a
+sample-accurate, low-level API for scheduling note timing) are mostly used by
+<code>player</code>'s own internal implementation, but are also available if you're building your
+own sequencer. See the source code's own comments for details.</p>
+
+</main>
+</div>
+<footer>
+<hr>
+<p>
+© 2026 <a href="https://megaak.com">MEGAAK SOFT</a> —
+This document is licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+</p>
+</footer>
+</body>
+</html>

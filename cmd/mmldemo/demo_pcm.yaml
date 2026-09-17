@@ -1,0 +1,60 @@
+pcmVoice:
+  # Drums
+  - voiceID: 0
+    voiceType: oneShot
+    loop: false
+    voiceSetting:
+      - fileName: kick.wav
+        note: C2
+        baseNote: 
+        volume: 127
+        pan: 0
+        envelope:
+      - fileName: snare.wav
+        note: D2
+        baseNote: 
+        volume: 127
+        pan: 0
+      - fileName: hat.wav
+        note: F#2
+        baseNote: 
+        volume: 50
+        pan: -16
+      - fileName: tom1.wav
+        note: D3
+        baseNote: 
+        volume: 90
+        pan: 16
+      - fileName: tom4.wav
+        note: A2
+        baseNote: 
+        volume: 90
+        pan: -16
+      - fileName: clash.wav
+        note: C#3
+        baseNote: 
+        volume: 60
+        pan: -5
+      - fileName: cowbell.wav
+        note: D#2
+        baseNote: 
+        volume: 60
+        pan: 0
+
+  # Dist Guiter1
+  - voiceID: 1
+    voiceType: long
+    loop: true
+    voiceSetting:
+      - fileName: distGuiter-e2.wav
+        baseNote: E3
+        envelope: "31, 1, 2, 6, 14"
+
+  # Dist Guiter2
+  - voiceID: 2
+    voiceType: long
+    loop: true
+    voiceSetting:
+      - fileName: distGuiter3-g2.wav
+        baseNote: G4
+        envelope: "31, 1, 2, 6, 14"

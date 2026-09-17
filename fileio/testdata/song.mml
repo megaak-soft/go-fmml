@@ -1,0 +1,14 @@
+[GoFMML File]
+[global]
+  tempo: 120
+  sequenceID: EmbedTest
+  loop: false
+[partSetting]
+part:
+  - partNo: 1
+    voiceID: 7
+    volume: 127
+    pan: 0
+[part1]
+C4D4E4
+[part1End]

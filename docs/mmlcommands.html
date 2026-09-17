@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>MMLコマンド仕様 - go-fmml</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#9aa3b2; --accent:#7aa2ff; --accent2:#ffb454;
+    --code-bg:#11141b; --table-head:#1d2129;
+    font-family: -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{line-height:1.8; font-size:15.5px;}
+  .layout{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{width:220px; flex:0 0 220px; padding:28px 16px; position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto; border-right:1px solid var(--border);}
+  nav.side h1{font-size:17px; margin:0 0 4px;}
+  nav.side .sub{font-size:11.5px; color:var(--muted); margin-bottom:20px;}
+  nav.side a{display:block; color:var(--muted); text-decoration:none; padding:7px 10px; border-radius:6px; font-size:13.5px;}
+  nav.side a:hover{background:var(--panel2); color:var(--text);}
+  nav.side a.current{background:var(--panel2); color:var(--accent); font-weight:600;}
+  main{flex:1; padding:36px 44px 80px; min-width:0;}
+  h1{font-size:28px; margin:0 0 6px;}
+  h2{font-size:20px; margin:44px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  h3{font-size:16px; margin:26px 0 10px; color:var(--accent);}
+  p{color:var(--text);}
+  .lead{color:var(--muted); font-size:16px;}
+  code{background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.92em; font-family: Consolas, "SF Mono", Menlo, monospace;}
+  pre{background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:16px 18px; overflow-x:auto; font-size:13px; line-height:1.6;}
+  pre code{background:none; border:none; padding:0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 22px; font-size:13.3px;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--table-head); color:var(--accent); font-weight:600;}
+  td code{white-space:nowrap;}
+  .note{background:var(--panel2); border-left:3px solid var(--accent2); padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  .warn{background:var(--panel2); border-left:3px solid #ff6b6b; padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  .toc{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin:18px 0;}
+  .toc a{display:inline-block; margin:3px 10px 3px 0; font-size:13px;}
+  .tag{display:inline-block; font-size:11px; padding:1px 8px; border-radius:20px; background:var(--panel2); border:1px solid var(--border); color:var(--muted); margin-left:6px;}
+  a{color:var(--accent);}
+  footer{max-width:1180px; margin:0 auto; padding:0 44px 60px 264px;}
+  footer hr{border:none; border-top:1px solid var(--border); margin:40px 0 18px;}
+  footer p{color:var(--muted); font-size:12.5px;}
+  @media (max-width:860px){
+    .layout{flex-direction:column;}
+    nav.side{position:relative; width:auto; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:24px;} footer{padding:0 24px 40px;}
+  }
+  .langswitch{position:fixed; top:16px; right:24px; z-index:50; display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px; font-size:12px; box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .langswitch a, .langswitch span{padding:4px 12px; border-radius:16px; text-decoration:none; color:var(--muted); font-weight:500;}
+  .langswitch a:hover{background:var(--panel2); color:var(--text);}
+  .langswitch span.current{background:var(--accent); color:#0f1115; font-weight:700;}
+</style>
+</head>
+<body>
+<div class="langswitch"><span class="current">日本語</span><a href="en/mmlcommands.html">English</a></div>
+<div class="layout">
+<nav class="side">
+  <h1><img src="img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+  <div class="sub">FM/PCM音源ドライバ ドキュメント</div>
+  <a href="index.html">概要・はじめに</a>
+  <a href="api.html">公開メソッド仕様</a>
+  <a href="fmvoice.html">FM音色パラメータ仕様</a>
+  <a href="pcmvoice.html">PCM音色パラメータ仕様</a>
+  <a href="mmlformat.html">MMLファイル構成仕様</a>
+  <a class="current" href="mmlcommands.html">MMLコマンド仕様</a>
+  <a href="smftool.html">SMF変換ツール</a>
+  <a href="license.html">ライセンス</a>
+</nav>
+<main>
+
+<h1>MMLコマンド仕様</h1>
+<p class="lead">パート本体（<code>[partN]</code> / <code>[pcmPartX]</code>）に記載する演奏コマンド
+の一覧です。コマンドは大文字小文字を区別しません。空白・タブ・改行は自由に入れて構いません（解析時
+に除去されます）。</p>
+
+<div class="toc">
+<a href="#conductor">コンダクターパート</a>
+<a href="#common">FM / PCM(long)パート 共通コマンド</a>
+<a href="#portamento">ポルタメント</a>
+<a href="#pitchbend">ピッチベンド</a>
+<a href="#oneshot">PCM(oneShot)パート コマンド</a>
+</div>
+
+<h2 id="conductor">コンダクターパートコマンド <span class="tag">[conductorPart]専用</span></h2>
+<table>
+<tr><th>コマンド</th><th>書式</th><th>説明</th></tr>
+<tr><td><code>T</code></td><td><code>T120</code></td><td>テンポを指定値に変更（小数点は無視）。</td></tr>
+<tr><td><code>R</code></td><td><code>R1</code> <code>R4.</code></td><td>休符（経過時間）。数字は
+音符長（2=2分音符）、<code>.</code>で付点、3連符は6/12/24。</td></tr>
+<tr><td><code>J</code></td><td><code>J</code></td><td>ループ時のジャンプポイント（1曲1個のみ有効）。</td></tr>
+</table>
+<pre><code>[conductor]
+[conductorPart]
+  R1 R1 J
+  T120 R4 T115 R4 T110 R4
+  T80
+[conductorPartEnd]</code></pre>
+<p>詳しい設置ルールは<a href="mmlformat.html#conductor">MMLファイル構成仕様</a>を参照。</p>
+
+<h2 id="common">FM / PCM(long)パート 共通コマンド</h2>
+<p>FM音色パート（<code>[partN]</code>）と、PCM音色パートのうち <code>partType: long</code>
+（<code>[pcmPartX]</code>）は同じコマンド体系を使用します。</p>
+
+<table>
+<tr><th>コマンド</th><th>書式</th><th>説明</th></tr>
+<tr><td><code>C D E F G A B</code></td><td><code>C4</code></td><td>ドレミファソラシの各ノート。</td></tr>
+<tr><td><code>R</code></td><td><code>R4</code></td><td>休符（レスト）。</td></tr>
+<tr><td>数字（長さ）</td><td><code>C4</code> <code>C4.</code> <code>C6</code> <code>C12</code></td>
+<td>ノート/休符の後につけ、音の長さを表す。2=2分音符、4=4分音符など。<code>.</code>で付点（長さを
+1.5倍）。3連符は6・12・24で指定。</td></tr>
+<tr><td><code># + -</code></td><td><code>C#4</code> <code>C+4</code> <code>C-4</code></td><td>直前の
+ノートの半音上げ下げ。<code>#</code>と<code>+</code>は同じ意味（シャープ）、<code>-</code>はフラット。</td></tr>
+<tr><td><code>[ ]</code></td><td><code>[C4E4G4]</code></td><td>コード（和音）。<code>[</code>と
+<code>]</code>内にはノートとオクターブ指定のみ記載可（他のコマンドは無視）。和音内で異なるオクター
+ブを混在させる場合は各ノートの前に<code>O</code>を個別指定します。</td></tr>
+<tr><td><code>O</code></td><td><code>O4</code></td><td>オクターブ指定。以降のノートは指定オクター
+ブで発音します。</td></tr>
+<tr><td><code>&gt;</code></td><td><code>&gt;</code></td><td>1オクターブ下げる（以降のノートに適用）。</td></tr>
+<tr><td><code>&lt;</code></td><td><code>&lt;</code></td><td>1オクターブ上げる（以降のノートに適用）。</td></tr>
+<tr><td><code>L</code></td><td><code>L4</code></td><td>デフォルト音符長の指定。数字省略時は4。以降、
+長さ指定のないノート/休符はこの長さで発音（例: <code>L4 CDRE</code> は <code>C4D4R4E4</code>と同義）。</td></tr>
+<tr><td><code>Q</code></td><td><code>Q2</code></td><td>音符長に対する発音長（スタッカート）指定。数字
+省略時は4。1=25%、2=50%、3=75%、4=100%。以降のノートに適用。</td></tr>
+<tr><td><code>V</code></td><td><code>V100</code></td><td>ベロシティ指定。数字省略時は64。以降のノート
+に適用。</td></tr>
+<tr><td><code>P</code></td><td><code>P-7</code></td><td>パート内でのパン定位変更。<code>[partSetting]</code>
+と同じ -16(左)〜16(右)のスケール。</td></tr>
+<tr><td><code>@</code></td><td><code>@2</code></td><td>音色IDの切り替え。以降のノートは指定音色で
+発音。</td></tr>
+<tr><td><code>&amp;</code></td><td><code>C1&amp;C1&amp;C1</code></td><td>同音ノート同士の連結（タイ）。
+アタックは最初の1回のみで、指定した音符すべての長さ分持続音になります。異なるノート同士を<code>&amp;</code>
+で連結した場合は無視されます。</td></tr>
+<tr><td><code>|: :|</code></td><td><code>|: L4 C D E :|*2</code></td><td>パターン繰り返し。
+<code>|:</code>〜<code>:|</code>で囲んだコマンド列を、末尾の<code>*n</code>回数分繰り返します
+（<code>*n</code>省略時は1回のみ）。囲い内には他コマンドを自由に記載可。</td></tr>
+<tr><td><code>#</code></td><td><code># コメント</code></td><td>行頭が<code>#</code>の行はコメント
+行として無視されます（先頭の空白は無視）。</td></tr>
+</table>
+
+<pre><code>O3 C4D4E4F#4
+G8A8B8
+O4 C16C#16D16e16 F2R4G8</code></pre>
+
+<h2 id="portamento">ポルタメント（音程スライド） <span class="tag">long専用</span></h2>
+<p>ノートとノートの間に<code>&amp;&amp;</code>を記載すると、前後のノートをポルタメント（滑らかな
+音程移動）で接続します。<code>&amp;&amp;</code>の後ろにポルタメントの長さ（音符長）を指定できます。</p>
+<pre><code>L2 C &&4 E
+
+[C E G]
+&&
+[D F G B]</code></pre>
+<table>
+<tr><th>ルール</th><th>説明</th></tr>
+<tr><td>発動タイミング</td><td>後ノートの発音タイミングでポルタメントが開始します。</td></tr>
+<tr><td>長さ指定</td><td><code>&amp;&amp;4</code>のように音符長を指定可能。未指定
+（<code>&amp;&amp;</code>のみ）、または後ノートの音符長を超える等の無効値の場合は、後ノートの長さ
+の50%がポルタメント長になります。</td></tr>
+<tr><td>前ノートのスタッカート</td><td>前ノートにスタッカート（<code>Q</code>）が設定されていても、
+ポルタメントを行うために無効化されます。</td></tr>
+<tr><td>休符を挟む場合</td><td>前ノートと後ノートの間に休符があるとポルタメントは無効になります。</td></tr>
+<tr><td>単音⇔和音の組み合わせ</td><td>単音→和音、和音→単音のどちらの組み合わせもポルタメントは
+無効です。</td></tr>
+<tr><td>和音→和音</td><td>有効です。和音の先頭ノート同士の音程差分を、和音を構成する各ノートにそれ
+ぞれ適用してポルタメントします（構成数や音程が異なっていても同様）。</td></tr>
+<tr><td>対応パート</td><td>FM音色パート、PCM音色パート（<code>partType: long</code>）でのみ使用可
+能。PCM oneShotパートでは使用できません。</td></tr>
+</table>
+
+<h2 id="pitchbend">ピッチベンド <span class="tag">long専用</span></h2>
+<p>ノートの直前・直後に記号を付けることで、発音開始時／発音終了直前にピッチベンドをかけられます。
+ピッチ変化は単純な線形変化です。</p>
+<table>
+<tr><th>記法</th><th>意味</th><th>差分音数</th><th>ベンド音符長</th></tr>
+<tr><td><code>_/note</code></td><td>発音開始時ピッチベンド<b>アップ</b>（低い音から発音し、指定音
+程まで上げる）</td><td><code>_</code>の後ろに指定（1=半音、2=全音…）</td><td><code>/</code>の後ろに
+指定</td></tr>
+<tr><td><code>_\note</code></td><td>発音開始時ピッチベンド<b>ダウン</b>（高い音から発音し、指定音程
+まで下げる）</td><td><code>_</code>の後ろに指定</td><td><code>\</code>の後ろに指定</td></tr>
+<tr><td><code>note/_</code></td><td>発音終了時ピッチベンド<b>アップ</b>（発音し、終了直前に指定音程
+まで上げる）</td><td><code>/</code>の後ろに指定</td><td><code>_</code>の後ろに指定</td></tr>
+<tr><td><code>note\_</code></td><td>発音終了時ピッチベンド<b>ダウン</b>（発音し、終了直前に指定音程
+まで下げる）</td><td><code>\</code>の後ろに指定</td><td><code>_</code>の後ろに指定</td></tr>
+</table>
+
+<h3>記載例</h3>
+<pre><code># 発音開始時: 半音2つ分低い音から始まり、4分音符かけてCの音程へ上げる（全体は2分音符）
+L2 _2/4 C2
+
+# 発音終了時: 全2分音符のうち、まずCを4分音符分発音し、残り4分音符でピッチベンドダウン
+C2\2_4
+
+# 差分音数・ベンド音符長を省略（デフォルト: 差分1半音、ベンド長は対象ノートの50%）
+L1 _/[C E G]</code></pre>
+
+<table>
+<tr><th>ルール</th><th>説明</th></tr>
+<tr><td>差分音数・ベンド音符長の省略</td><td>省略時のデフォルトは、差分音数=1（半音）、ベンド音符長
+=対象ノートの音符長の50%。</td></tr>
+<tr><td>スタッカートとの併用</td><td>対象ノートにスタッカート設定がある場合、ベンド音符長もスタッカ
+ート後の実発音時間に合わせて短くなります。</td></tr>
+<tr><td>和音への適用</td><td>対象ノートが和音（コード）であってもピッチベンド可能です。</td></tr>
+<tr><td>対応パート</td><td>FM音色パート、PCM音色パート（<code>partType: long</code>）でのみ使用可能。
+PCM oneShotパートでは使用できません。</td></tr>
+</table>
+
+<h2 id="oneshot">PCM(oneShot)パート コマンド <span class="tag">[pcmPartX] partType: oneShot専用</span></h2>
+<p>ワンショットタイプの音色は、音色に割り当てたノート（サンプル）ごとに個別のMMLコマンド列を
+<code>{ }</code>で囲んで記載します。1パート内に複数のノート定義ブロックを記載できます。</p>
+
+<table>
+<tr><th>コマンド</th><th>書式</th><th>説明</th></tr>
+<tr><td><code>X</code></td><td><code>X</code></td><td>このノートに割り当てられたワンショットサンプル
+を発音します。基本はWAV波形の最後まで再生されますが、再生完了前に同じサンプルの次の発音が来た場合
+は、先の発音を止めて後発の発音を優先します。</td></tr>
+<tr><td><code>R</code></td><td><code>R4</code></td><td>休符。</td></tr>
+<tr><td>数字（長さ）</td><td><code>X4</code> <code>X4.</code></td><td>音符/休符の後につけ、長さを
+表す（2=2分音符等）。<code>.</code>で付点。</td></tr>
+<tr><td><code>L</code></td><td><code>L4</code></td><td>デフォルト音符長の指定（省略時4）。</td></tr>
+<tr><td><code>V</code></td><td><code>V100</code></td><td>ベロシティ指定（省略時64）。以降のノートに
+適用。</td></tr>
+</table>
+
+<div class="warn"><b>oneShotパートでは無効なコマンド：</b> <code>@</code>、<code>[ ]</code>（コード）、
+<code># + -</code>（臨時記号）、<code>O</code>・<code>&lt;</code>・<code>&gt;</code>（オクターブ系）、
+<code>Q</code>（スタッカート）、<code>P</code>（パン）は、oneShotパートでは使用できません
+（記載しても無視されます）。これらはノート＝どのサンプルを鳴らすかの選択に使われるため、音程系の
+コマンドとは意味が両立しません。</div>
+
+<pre><code>C1 {
+  V100 L4 X R X8 X8 X
+  X R X8 X8 X
+}
+E1 {
+  V100 L4 R X R X
+  R X R X8 X8 X
+}
+F#1 {
+  L8 V70 X V50 X X X V70 X V50 X X X
+  V70 X V50 X X X V70 X V50 X X X
+  X
+}</code></pre>
+
+<p class="note">上の例では <code>C1</code>・<code>E1</code>・<code>F#1</code>の各ノート（＝PCM音色
+YAML側の<code>voiceSetting</code>で割り当てたサンプル）ごとに、独立したリズムパターンを記述してい
+ます。ノート名はPCM音色設定ファイルの<code>voiceSetting[].note</code>と一致させます。</p>
+
+</main>
+</div>
+<footer>
+<hr>
+<p>
+© 2026 <a href="https://megaak.com">MEGAAK SOFT</a> —
+本ドキュメントは <a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank" rel="noopener">CC BY 4.0</a> の下でライセンスされています。
+</p>
+</footer>
+</body>
+</html>

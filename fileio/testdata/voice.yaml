@@ -1,0 +1,21 @@
+fmVoice:
+  - voiceID: 7
+    algorithm: 2
+    feedback: 20
+    operators:
+      - multiple: 1
+        totallevel: 127
+        detuneCents: 0
+        envelope: "11, 10, 0.6, 4, 12"
+      - multiple: 2
+        totallevel: 40
+        detuneCents: 0
+        envelope: "31, 12, 0.3, 4, 12"
+      - multiple: 1
+        totallevel: 30
+        detuneCents: 0
+        envelope: "31, 10, 0.5, 4, 12"
+      - multiple: 1
+        totallevel: 0
+        detuneCents: 0
+        envelope: "31, 8, 0.7, 2, 10"

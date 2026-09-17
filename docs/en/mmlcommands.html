@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MML Command Reference - go-fmml</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#9aa3b2; --accent:#7aa2ff; --accent2:#ffb454;
+    --code-bg:#11141b; --table-head:#1d2129;
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{line-height:1.8; font-size:15.5px;}
+  .layout{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{width:220px; flex:0 0 220px; padding:28px 16px; position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto; border-right:1px solid var(--border);}
+  nav.side h1{font-size:17px; margin:0 0 4px;}
+  nav.side .sub{font-size:11.5px; color:var(--muted); margin-bottom:20px;}
+  nav.side a{display:block; color:var(--muted); text-decoration:none; padding:7px 10px; border-radius:6px; font-size:13.5px;}
+  nav.side a:hover{background:var(--panel2); color:var(--text);}
+  nav.side a.current{background:var(--panel2); color:var(--accent); font-weight:600;}
+  main{flex:1; padding:36px 44px 80px; min-width:0;}
+  h1{font-size:28px; margin:0 0 6px;}
+  h2{font-size:20px; margin:44px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  h3{font-size:16px; margin:26px 0 10px; color:var(--accent);}
+  p{color:var(--text);}
+  .lead{color:var(--muted); font-size:16px;}
+  code{background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.92em; font-family: Consolas, "SF Mono", Menlo, monospace;}
+  pre{background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:16px 18px; overflow-x:auto; font-size:13px; line-height:1.6;}
+  pre code{background:none; border:none; padding:0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 22px; font-size:13.3px;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--table-head); color:var(--accent); font-weight:600;}
+  td code{white-space:nowrap;}
+  .note{background:var(--panel2); border-left:3px solid var(--accent2); padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  .warn{background:var(--panel2); border-left:3px solid #ff6b6b; padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  .toc{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin:18px 0;}
+  .toc a{display:inline-block; margin:3px 10px 3px 0; font-size:13px;}
+  .tag{display:inline-block; font-size:11px; padding:1px 8px; border-radius:20px; background:var(--panel2); border:1px solid var(--border); color:var(--muted); margin-left:6px;}
+  a{color:var(--accent);}
+  footer{max-width:1180px; margin:0 auto; padding:0 44px 60px 264px;}
+  footer hr{border:none; border-top:1px solid var(--border); margin:40px 0 18px;}
+  footer p{color:var(--muted); font-size:12.5px;}
+  .langswitch{position:fixed; top:16px; right:24px; z-index:50; display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px; font-size:12px; box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .langswitch a, .langswitch span{padding:4px 12px; border-radius:16px; text-decoration:none; color:var(--muted); font-weight:500;}
+  .langswitch a:hover{background:var(--panel2); color:var(--text);}
+  .langswitch span.current{background:var(--accent); color:#0f1115; font-weight:700;}
+  @media (max-width:860px){
+    .layout{flex-direction:column;}
+    nav.side{position:relative; width:auto; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:24px;} footer{padding:0 24px 40px;}
+  }
+</style>
+</head>
+<body>
+<div class="langswitch"><a href="../mmlcommands.html">日本語</a><span class="current">English</span></div>
+<div class="layout">
+<nav class="side">
+  <h1><img src="../img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+  <div class="sub">FM/PCM Sound Driver Docs</div>
+  <a href="index.html">Overview &amp; Getting Started</a>
+  <a href="api.html">Public API Reference</a>
+  <a href="fmvoice.html">FM Voice Parameters</a>
+  <a href="pcmvoice.html">PCM Voice Parameters</a>
+  <a href="mmlformat.html">MML File Structure</a>
+  <a class="current" href="mmlcommands.html">MML Command Reference</a>
+  <a href="smftool.html">SMF Conversion Tool</a>
+  <a href="license.html">License</a>
+</nav>
+<main>
+
+<h1>MML Command Reference</h1>
+<p class="lead">The performance commands written inside a part body (<code>[partN]</code> /
+<code>[pcmPartX]</code>). Commands are case-insensitive. Whitespace, tabs, and line breaks may be
+used freely (they're stripped during parsing).</p>
+
+<div class="toc">
+<a href="#conductor">Conductor part</a>
+<a href="#common">FM / PCM(long) part common commands</a>
+<a href="#portamento">Portamento</a>
+<a href="#pitchbend">Pitch bend</a>
+<a href="#oneshot">PCM(oneShot) part commands</a>
+</div>
+
+<h2 id="conductor">Conductor part commands <span class="tag">[conductorPart] only</span></h2>
+<table>
+<tr><th>Command</th><th>Format</th><th>Description</th></tr>
+<tr><td><code>T</code></td><td><code>T120</code></td><td>Changes tempo to the given value (decimal
+point ignored).</td></tr>
+<tr><td><code>R</code></td><td><code>R1</code> <code>R4.</code></td><td>A rest (elapsed time). A
+number is the note length (2 = half note), <code>.</code> adds a dot, 6/12/24 for triplets.</td></tr>
+<tr><td><code>J</code></td><td><code>J</code></td><td>A loop jump point (only one is honored per
+song).</td></tr>
+</table>
+<pre><code>[conductor]
+[conductorPart]
+  R1 R1 J
+  T120 R4 T115 R4 T110 R4
+  T80
+[conductorPartEnd]</code></pre>
+<p>See the <a href="mmlformat.html#conductor">MML File Structure</a> page for the full placement
+rules.</p>
+
+<h2 id="common">FM / PCM(long) part common commands</h2>
+<p>An FM voice part (<code>[partN]</code>) and a PCM voice part with <code>partType: long</code>
+(<code>[pcmPartX]</code>) share the same command grammar.</p>
+
+<table>
+<tr><th>Command</th><th>Format</th><th>Description</th></tr>
+<tr><td><code>C D E F G A B</code></td><td><code>C4</code></td><td>The notes of the scale (do re mi
+fa so la ti).</td></tr>
+<tr><td><code>R</code></td><td><code>R4</code></td><td>A rest.</td></tr>
+<tr><td>number (length)</td><td><code>C4</code> <code>C4.</code> <code>C6</code> <code>C12</code></td>
+<td>Attached after a note/rest to give its length. 2 = half note, 4 = quarter note, etc.
+<code>.</code> adds a dot (×1.5 length). 6/12/24 for triplets.</td></tr>
+<tr><td><code># + -</code></td><td><code>C#4</code> <code>C+4</code> <code>C-4</code></td><td>Raises
+or lowers the preceding note by a semitone. <code>#</code> and <code>+</code> both mean sharp;
+<code>-</code> means flat.</td></tr>
+<tr><td><code>[ ]</code></td><td><code>[C4E4G4]</code></td><td>A chord. Only notes and octave
+markers may appear inside <code>[</code>/<code>]</code> (other commands are ignored). To mix
+different octaves within one chord, prefix each note individually with <code>O</code>.</td></tr>
+<tr><td><code>O</code></td><td><code>O4</code></td><td>Sets the octave; applies to every following
+note.</td></tr>
+<tr><td><code>&gt;</code></td><td><code>&gt;</code></td><td>Drops the octave by one (applies going
+forward).</td></tr>
+<tr><td><code>&lt;</code></td><td><code>&lt;</code></td><td>Raises the octave by one (applies going
+forward).</td></tr>
+<tr><td><code>L</code></td><td><code>L4</code></td><td>Sets the default note length (4 if the number
+is omitted). Any following note/rest with no explicit length uses this one (e.g. <code>L4 CDRE</code>
+is equivalent to <code>C4D4R4E4</code>).</td></tr>
+<tr><td><code>Q</code></td><td><code>Q2</code></td><td>Sets the gate time (staccato) as a fraction of
+the note's length (4 if the number is omitted). 1 = 25%, 2 = 50%, 3 = 75%, 4 = 100%. Applies going
+forward.</td></tr>
+<tr><td><code>V</code></td><td><code>V100</code></td><td>Sets velocity (64 if the number is omitted).
+Applies going forward.</td></tr>
+<tr><td><code>P</code></td><td><code>P-7</code></td><td>Changes pan within the part, on the same
+-16(left)-16(right) scale as <code>[partSetting]</code>.</td></tr>
+<tr><td><code>@</code></td><td><code>@2</code></td><td>Switches the voice ID; applies to every
+following note.</td></tr>
+<tr><td><code>&amp;</code></td><td><code>C1&amp;C1&amp;C1</code></td><td>Ties same-pitch notes
+together. Only the first note attacks; the sustain lasts the combined length of every tied note. Tying
+two different pitches together is ignored.</td></tr>
+<tr><td><code>|: :|</code></td><td><code>|: L4 C D E :|*2</code></td><td>Pattern repeat. The commands
+between <code>|:</code> and <code>:|</code> repeat <code>*n</code> times (once if <code>*n</code> is
+omitted). Any other command may appear inside the enclosure.</td></tr>
+<tr><td><code>#</code></td><td><code># comment</code></td><td>A line whose first non-whitespace
+character is <code>#</code> is a comment and is ignored.</td></tr>
+</table>
+
+<pre><code>O3 C4D4E4F#4
+G8A8B8
+O4 C16C#16D16e16 F2R4G8</code></pre>
+
+<h2 id="portamento">Portamento (pitch glide) <span class="tag">long only</span></h2>
+<p>Writing <code>&amp;&amp;</code> between two notes glides smoothly (a portamento) from the first
+note's pitch to the second's. A note length may follow <code>&amp;&amp;</code> to set the glide's
+own duration.</p>
+<pre><code>L2 C &&4 E
+
+[C E G]
+&&
+[D F G B]</code></pre>
+<table>
+<tr><th>Rule</th><th>Description</th></tr>
+<tr><td>When it fires</td><td>The portamento begins right as the second note is triggered.</td></tr>
+<tr><td>Length</td><td>A note length may follow, e.g. <code>&amp;&amp;4</code>. If omitted (just
+<code>&amp;&amp;</code>), or invalid (e.g. longer than the second note itself), the glide length
+defaults to 50% of the second note's own length.</td></tr>
+<tr><td>Staccato on the first note</td><td>A staccato (<code>Q</code>) setting on the first note is
+overridden so the portamento can actually take place.</td></tr>
+<tr><td>A rest in between</td><td>If a rest sits between the two notes, the portamento is disabled.</td></tr>
+<tr><td>Single note ↔ chord</td><td>Neither single-note-to-chord nor chord-to-single-note supports
+portamento.</td></tr>
+<tr><td>Chord → chord</td><td>Supported. The interval between the two chords' lead notes is applied
+to each corresponding note of the chord (even if the chords differ in size or interval).</td></tr>
+<tr><td>Supported parts</td><td>FM voice parts and PCM voice parts with <code>partType: long</code>
+only. Not available on a PCM oneShot part.</td></tr>
+</table>
+
+<h2 id="pitchbend">Pitch bend <span class="tag">long only</span></h2>
+<p>Placing a symbol immediately before or after a note applies a pitch bend at note-on or right before
+note-off. Pitch changes are simple linear ramps.</p>
+<table>
+<tr><th>Notation</th><th>Meaning</th><th>Interval</th><th>Bend length</th></tr>
+<tr><td><code>_/note</code></td><td>Pitch bend <b>up</b> at note-on (starts lower, bends up to the
+written note)</td><td>after <code>_</code> (1 = semitone, 2 = whole tone, ...)</td><td>after
+<code>/</code></td></tr>
+<tr><td><code>_\note</code></td><td>Pitch bend <b>down</b> at note-on (starts higher, bends down to
+the written note)</td><td>after <code>_</code></td><td>after <code>\</code></td></tr>
+<tr><td><code>note/_</code></td><td>Pitch bend <b>up</b> at note-off (plays the written note, bends
+up right before it ends)</td><td>after <code>/</code></td><td>after <code>_</code></td></tr>
+<tr><td><code>note\_</code></td><td>Pitch bend <b>down</b> at note-off (plays the written note, bends
+down right before it ends)</td><td>after <code>\</code></td><td>after <code>_</code></td></tr>
+</table>
+
+<h3>Examples</h3>
+<pre><code># Note-on bend: starts 2 semitones low, bends up to C over a quarter note (whole note is a half note)
+L2 _2/4 C2
+
+# Note-off bend: C plays for a quarter note, then bends down over the remaining quarter note
+C2\2_4
+
+# Interval and bend length omitted (defaults: 1 semitone, 50% of the note's own length)
+L1 _/[C E G]</code></pre>
+
+<table>
+<tr><th>Rule</th><th>Description</th></tr>
+<tr><td>Omitted interval / bend length</td><td>Defaults: interval = 1 (a semitone), bend length = 50%
+of the target note's own length.</td></tr>
+<tr><td>Combined with staccato</td><td>If the target note has a staccato setting, the bend length is
+shortened to match its actual, shortened sounding time.</td></tr>
+<tr><td>Applied to chords</td><td>A chord may also be pitch-bent.</td></tr>
+<tr><td>Supported parts</td><td>FM voice parts and PCM voice parts with <code>partType: long</code>
+only. Not available on a PCM oneShot part.</td></tr>
+</table>
+
+<h2 id="oneshot">PCM(oneShot) part commands <span class="tag">[pcmPartX] partType: oneShot only</span></h2>
+<p>A oneShot voice's command stream is written per assigned note (sample), each wrapped in
+<code>{ }</code>. Multiple note blocks may appear within one part.</p>
+
+<table>
+<tr><th>Command</th><th>Format</th><th>Description</th></tr>
+<tr><td><code>X</code></td><td><code>X</code></td><td>Triggers the sample assigned to this note.
+Normally plays through to the WAV's own natural end, but if the same sample is triggered again
+before playback finishes, the earlier hit is stopped in favor of the new one.</td></tr>
+<tr><td><code>R</code></td><td><code>R4</code></td><td>A rest.</td></tr>
+<tr><td>number (length)</td><td><code>X4</code> <code>X4.</code></td><td>Attached after a note/rest
+to set its length (2 = half note, etc). <code>.</code> adds a dot.</td></tr>
+<tr><td><code>L</code></td><td><code>L4</code></td><td>Sets the default note length (4 if omitted).</td></tr>
+<tr><td><code>V</code></td><td><code>V100</code></td><td>Sets velocity (64 if omitted). Applies going
+forward.</td></tr>
+</table>
+
+<div class="warn"><b>Commands not available in a oneShot part:</b> <code>@</code>, <code>[ ]</code>
+(chords), <code># + -</code> (accidentals), <code>O</code>/<code>&lt;</code>/<code>&gt;</code> (octave
+commands), <code>Q</code> (staccato), and <code>P</code> (pan) are all unavailable in a oneShot part
+(they're silently ignored if written). These all relate to pitch, but a oneShot "note" instead
+selects which sample plays - the two concepts don't compose.</div>
+
+<pre><code>C1 {
+  V100 L4 X R X8 X8 X
+  X R X8 X8 X
+}
+E1 {
+  V100 L4 R X R X
+  R X R X8 X8 X
+}
+F#1 {
+  L8 V70 X V50 X X X V70 X V50 X X X
+  V70 X V50 X X X V70 X V50 X X X
+  X
+}</code></pre>
+
+<p class="note">In the example above, <code>C1</code>, <code>E1</code>, and <code>F#1</code> (each
+the sample assigned via the PCM voice YAML's <code>voiceSetting</code>) each get their own,
+independent rhythm pattern. Note names must match the PCM voice file's
+<code>voiceSetting[].note</code> values.</p>
+
+</main>
+</div>
+<footer>
+<hr>
+<p>
+© 2026 <a href="https://megaak.com">MEGAAK SOFT</a> —
+This document is licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+</p>
+</footer>
+</body>
+</html>

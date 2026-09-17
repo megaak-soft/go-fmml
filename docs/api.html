@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>公開メソッド仕様 - go-fmml</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#9aa3b2; --accent:#7aa2ff; --accent2:#ffb454;
+    --code-bg:#11141b; --table-head:#1d2129;
+    font-family: -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{line-height:1.8; font-size:15.5px;}
+  .layout{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{width:220px; flex:0 0 220px; padding:28px 16px; position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto; border-right:1px solid var(--border);}
+  nav.side h1{font-size:17px; margin:0 0 4px;}
+  nav.side .sub{font-size:11.5px; color:var(--muted); margin-bottom:20px;}
+  nav.side a{display:block; color:var(--muted); text-decoration:none; padding:7px 10px; border-radius:6px; font-size:13.5px;}
+  nav.side a:hover{background:var(--panel2); color:var(--text);}
+  nav.side a.current{background:var(--panel2); color:var(--accent); font-weight:600;}
+  main{flex:1; padding:36px 44px 80px; min-width:0;}
+  h1{font-size:28px; margin:0 0 6px;}
+  h2{font-size:20px; margin:44px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  h3{font-size:15px; margin:0; font-family:Consolas,"SF Mono",Menlo,monospace; color:var(--accent2);}
+  p{color:var(--text);}
+  .lead{color:var(--muted); font-size:16px;}
+  code{background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.92em; font-family: Consolas, "SF Mono", Menlo, monospace;}
+  pre{background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:14px 16px; overflow-x:auto; font-size:12.8px; line-height:1.6; margin:10px 0 0;}
+  pre code{background:none; border:none; padding:0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 22px; font-size:13.8px;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--table-head); color:var(--accent); font-weight:600;}
+  .method{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin:14px 0;}
+  .method .badge{display:inline-block; font-size:10.5px; padding:2px 8px; border-radius:20px; background:var(--panel2); color:var(--muted); border:1px solid var(--border); margin-left:10px; vertical-align:middle;}
+  .method p{color:var(--muted); font-size:13.8px; margin:10px 0 0;}
+  .note{background:var(--panel2); border-left:3px solid var(--accent2); padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  a{color:var(--accent);}
+  footer{max-width:1180px; margin:0 auto; padding:0 44px 60px 264px;}
+  footer hr{border:none; border-top:1px solid var(--border); margin:40px 0 18px;}
+  footer p{color:var(--muted); font-size:12.5px;}
+  @media (max-width:860px){
+    .layout{flex-direction:column;}
+    nav.side{position:relative; width:auto; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:24px;} footer{padding:0 24px 40px;}
+  }
+  .langswitch{position:fixed; top:16px; right:24px; z-index:50; display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px; font-size:12px; box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .langswitch a, .langswitch span{padding:4px 12px; border-radius:16px; text-decoration:none; color:var(--muted); font-weight:500;}
+  .langswitch a:hover{background:var(--panel2); color:var(--text);}
+  .langswitch span.current{background:var(--accent); color:#0f1115; font-weight:700;}
+</style>
+</head>
+<body>
+<div class="langswitch"><span class="current">日本語</span><a href="en/api.html">English</a></div>
+<div class="layout">
+<nav class="side">
+  <h1><img src="img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+  <div class="sub">FM/PCM音源ドライバ ドキュメント</div>
+  <a href="index.html">概要・はじめに</a>
+  <a class="current" href="api.html">公開メソッド仕様</a>
+  <a href="fmvoice.html">FM音色パラメータ仕様</a>
+  <a href="pcmvoice.html">PCM音色パラメータ仕様</a>
+  <a href="mmlformat.html">MMLファイル構成仕様</a>
+  <a href="mmlcommands.html">MMLコマンド仕様</a>
+  <a href="smftool.html">SMF変換ツール</a>
+  <a href="license.html">ライセンス</a>
+</nav>
+<main>
+
+<h1>公開メソッド仕様</h1>
+<p class="lead">go-fmml をアプリケーションから利用する際に呼び出す公開関数・メソッドの一覧です。</p>
+
+<p>通常のBGM再生用途では「<b>①ファイル入力</b> → ②<code>fmcore.NewEngine</code>でエンジンを生成 →
+<b>③再生制御</b>」の3系統だけで完結します。<b>④FM/PCM音源コア 低レベルAPI</b> は、MMLを使わず単音
+を直接鳴らしたい場合や、独自のシーケンサを組みたい場合のためのAPIです。</p>
+
+<h2>① ファイル入力 <code style="font-size:12px;">package fileio</code></h2>
+
+<div class="method"><h3>fileio.LoadFMVoiceFile(path string) error</h3><span class="badge">FM音色</span>
+<p>指定した絶対パスのFM音色パラメータYAMLファイルを読み込み・解析し、メモリに登録します。軽微な
+解析エラーはログに警告出力した上で処理を継続し、致命的なエラー（YAML自体が不正等）の場合のみ
+<code>error</code>を返します。</p></div>
+
+<div class="method"><h3>fileio.LoadFMVoiceFileFS(fsys embed.FS, path string) error</h3><span class="badge">FM音色 / embed</span>
+<p><code>LoadFMVoiceFile</code>の<code>embed.FS</code>版。<code>go:embed</code>でゲーム本体に埋め
+込んだFM音色ファイルを読み込みます。</p></div>
+
+<div class="method"><h3>fileio.LoadPCMVoiceFile(path string) error</h3><span class="badge">PCM音色</span>
+<p>指定した絶対パスのPCM音色パラメータYAMLファイルを読み込み、参照されている全てのWAVファイルも
+併せて読み込んでメモリに登録します。各<code>voiceSetting</code>の<code>fileName</code>がファイル
+名のみ（パス無し）の場合はYAMLファイルと同一フォルダを探索します。WAV読み込みに失敗した場合も
+<code>error</code>を返します。</p></div>
+
+<div class="method"><h3>fileio.LoadPCMVoiceFileFS(fsys embed.FS, path string) error</h3><span class="badge">PCM音色 / embed</span>
+<p><code>LoadPCMVoiceFile</code>の<code>embed.FS</code>版。<code>fileName</code>のパス解決は
+<code>fsys</code>のルートを基準に行います。</p></div>
+
+<div class="method"><h3>fileio.LoadMMLFile(path string) error</h3><span class="badge">MML</span>
+<p>指定した絶対パスの<code>.mml</code>シーケンスファイルを読み込み・解析し、
+<code>[global]</code>の<code>sequenceID</code>をキーとしてメモリに登録します。</p></div>
+
+<div class="method"><h3>fileio.LoadMMLFileFS(fsys embed.FS, path string) error</h3><span class="badge">MML / embed</span>
+<p><code>LoadMMLFile</code>の<code>embed.FS</code>版。</p></div>
+
+<div class="method"><h3>fileio.SetMMLTextData(data string) error</h3><span class="badge">MML / 文字列</span>
+<p>MMLファイルと同じ書式のテキストを、ファイルではなくGoの文字列（バッククォート複数行リテラル
+等）として直接渡して読み込みます（Phase 7）。以降の処理は<code>LoadMMLFile</code>と同一です。</p></div>
+
+<div class="method"><h3>fileio.SetFMVoiceData(data string) error</h3><span class="badge">FM音色 / 文字列</span>
+<p>FM音色パラメータYAMLと同じ書式のテキストを文字列として直接渡して読み込みます（Phase 7）。</p></div>
+
+<div class="method"><h3>fileio.SetPCMVoiceData(data string) error</h3><span class="badge">PCM音色 / 文字列</span>
+<p>PCM音色パラメータYAMLと同じ書式のテキストを文字列として直接渡して読み込みます（Phase 7）。
+参照WAVファイルの相対パスはプロセスのカレントディレクトリを基準に解決されます。</p></div>
+
+<div class="note">
+<b>WAV読み込みの効率化</b>（Phase 7）：<code>LoadPCMVoiceFile</code> / <code>LoadPCMVoiceFileFS</code> /
+<code>SetPCMVoiceData</code> はいずれも、解決済みファイルパスが既にメモリ上にキャッシュ済みの場合は
+再デコードせずキャッシュを再利用します。
+</div>
+
+<h2>② メモリ管理 <code style="font-size:12px;">package memory</code></h2>
+
+<div class="method"><h3>memory.ClearVoices()</h3><span class="badge">FM音色</span>
+<p>登録済みの全FM音色をメモリから削除します。</p></div>
+<div class="method"><h3>memory.ClearPCMVoices()</h3><span class="badge">PCM音色</span>
+<p>登録済みの全PCM音色をメモリから削除します（波形キャッシュ自体は消えません）。</p></div>
+<div class="method"><h3>memory.ClearPCMWaveCache()</h3><span class="badge">PCM波形 / Phase 7</span>
+<p>デコード済みWAV波形のキャッシュを全て削除し、メモリを解放します。音色定義（<code>ClearPCMVoices</code>
+が扱う対象）とは別物です。</p></div>
+<div class="method"><h3>memory.ClearSequences()</h3><span class="badge">シーケンス</span>
+<p>読み込み済みの全シーケンスデータ（MML解析結果）をメモリから削除します。</p></div>
+
+<h2>③ 再生制御 <code style="font-size:12px;">package player</code></h2>
+
+<div class="method"><h3>player.Play(engine Engine, sequenceID string, onComplete func()) error</h3><span class="badge">再生</span>
+<p>読み込み済みのシーケンスを非同期で再生開始します（呼び出し元はブロックされません）。既に何か
+再生中であれば先に停止します。ループしない曲が最後まで再生し終えたタイミングで<code>onComplete</code>
+が（非nilなら）バックグラウンドgoroutineから1回だけ呼ばれます。<code>[global]</code>に
+<code>startOffset</code>が設定されている場合は、その位置から再生を開始します。</p></div>
+
+<div class="method"><h3>player.SkipPlay(engine Engine, sequenceID string, seekSeconds float64, onComplete func()) error</h3><span class="badge">再生</span>
+<p><code>Play</code>と同様ですが、曲の先頭ではなく<code>seekSeconds</code>秒の位置から再生を開始
+します。ノートの途中に位置する場合はそのノートの先頭まで巻き戻ります。</p></div>
+
+<div class="method"><h3>player.FadeInPlay(engine Engine, sequenceID string, fadeSeconds float64, onComplete func()) error</h3><span class="badge">再生 / フェード</span>
+<p>音量0から開始し、<code>fadeSeconds</code>秒かけて<code>[global]</code>のvolumeまで滑らかに
+フェードインしながら再生します。</p></div>
+
+<div class="method"><h3>player.FadeOutPlay(engine Engine, sequenceID string, fadeSeconds float64, onComplete func()) error</h3><span class="badge">再生 / フェード</span>
+<p>曲の終わりの<code>fadeSeconds</code>秒前からフェードアウトを開始し、曲の終端でちょうど音量0に
+なるように再生します。<code>loop: true</code>の曲では自動フェードアウトは行われません
+（<code>Play</code>と同じ動作）。</p></div>
+
+<div class="method"><h3>player.FadeInOutPlay(engine Engine, sequenceID string, fadeSeconds float64, onComplete func()) error</h3><span class="badge">再生 / フェード</span>
+<p><code>FadeInPlay</code>と<code>FadeOutPlay</code>を組み合わせた再生です。</p></div>
+
+<div class="method"><h3>player.FadeOut(fadeSeconds float64) error</h3><span class="badge">フェード</span>
+<p>現在再生中のシーケンスを、任意のタイミングから<code>fadeSeconds</code>秒かけてフェードアウトし、
+音量0に達した時点で再生を停止します。<code>loop: true</code>の曲にも適用されます（自動フェードとは
+異なり明示的にいつでも呼び出せます）。</p></div>
+
+<div class="method"><h3>player.SetMasterVolume(engine Engine, volume float64) </h3><span class="badge">音量</span>
+<p><code>[global]</code>のvolumeと同じ0-127スケールの実値でマスターボリュームを上書きします。曲の
+再生中に呼んだ場合は約0.3秒かけて滑らかに変化し、再生中でなければ即座に反映されます。</p></div>
+
+<div class="method"><h3>player.SetMasterVolumePercent(engine Engine, percent float64)</h3><span class="badge">音量</span>
+<p>直近に読み込んだシーケンスの<code>[global]</code>volume値を100%として、パーセント指定でマスタ
+ーボリュームを設定します（50なら半分の音量）。再生中の滑らかな変化挙動は<code>SetMasterVolume</code>
+と同じです。</p></div>
+
+<div class="method"><h3>player.Pause() error</h3><span class="badge">再生制御</span>
+<p>再生中のシーケンスをその場で一時停止します（短いフェードアウトで途切れを防止）。何も再生して
+いない場合はエラーを返します。</p></div>
+
+<div class="method"><h3>player.Resume() error</h3><span class="badge">再生制御</span>
+<p><code>Pause</code>で一時停止したシーケンスの再生を再開します。ノートの途中で一時停止していた
+場合はそのノートの先頭まで巻き戻して再開します。</p></div>
+
+<div class="method"><h3>player.Stop() error</h3><span class="badge">再生制御</span>
+<p>再生中（または一時停止中）のシーケンスを完全に停止します。</p></div>
+
+<div class="method"><h3>player.IsPlaying() bool</h3><span class="badge">状態取得</span>
+<p>現在アクティブに再生中かどうかを返します（一時停止中や未再生時はfalse）。</p></div>
+
+<div class="method"><h3>player.Rewind() error</h3><span class="badge">再生制御</span>
+<p>再生位置を曲の先頭（tick 0）に巻き戻します。再生中であれば即座に先頭から再生し直し、一時停止中
+であれば次の<code>Resume</code>時に先頭から再生されます。</p></div>
+
+<h2>④ FM/PCM音源コア 低レベルAPI <code style="font-size:12px;">package fmcore</code></h2>
+<p class="lead" style="font-size:13.5px;">MMLを介さず、音色登録から発音までを直接コードで制御したい
+場合に使用します。<code>fmcore.Engine</code>がFM・PCM両方の音源コアを内包しています。</p>
+
+<div class="method"><h3>fmcore.NewEngine(sampleRate int) (*Engine, error)</h3><span class="badge">初期化</span>
+<p>音声出力デバイスを開き（内部で<code>oto/v3</code>のコンテキストを初期化）、指定サンプルレート
+でエンジンを生成します。</p></div>
+
+<div class="method"><h3>fmcore.NewEngineWithoutOutput(sampleRate int) *Engine</h3><span class="badge">初期化</span>
+<p>音声デバイスを開かずにエンジンを生成します。<code>*Engine</code>自体が<code>io.Reader</code>を
+実装しているため、アプリ側が既に持っている<code>oto.Context</code>にプレイヤーとして登録できます。</p></div>
+
+<div class="method"><h3>(*Engine) RegisterVoice(id VoiceID, voice Voice)</h3><span class="badge">音色登録</span>
+<p>FM音色パラメータ（オペレータ、エンベロープ、アルゴリズム）をIDを付けてメモリに登録します。</p></div>
+
+<div class="method"><h3>(*Engine) SetPart(id PartID, voice VoiceID, volume, pan float64) error</h3><span class="badge">パート設定</span>
+<p>指定した発音パートに、鳴らす音色ID・音量・パン定位を設定します。</p></div>
+
+<div class="method"><h3>(*Engine) NoteOnRow(partID PartID, noteNumber uint8, durationMs int, velocity uint8) (NoteID, error)</h3><span class="badge">発音</span>
+<p>ノート番号・発音長(ms)・ベロシティを数値で直接指定して発音します。発音IDを即座に返し、実際の
+発音処理は非同期に継続します。</p></div>
+
+<div class="method"><h3>(*Engine) NoteOn(partID PartID, noteName string, noteType string, sustain int, velocity uint8) (NoteID, error)</h3><span class="badge">発音</span>
+<p><code>"C#5"</code>のようなノート名、<code>"NOTE4"</code>のような音符種別、サスティン(%)、
+ベロシティを指定して発音する抽象化版です。内部でノート番号・発音長msに変換されます。</p></div>
+
+<div class="method"><h3>(*Engine) RegisterPCMVoice(id pcmcore.VoiceID, voice pcmcore.Voice)</h3><span class="badge">PCM音色登録</span>
+<p>PCM音色（oneShot/long）を登録します。</p></div>
+
+<div class="method"><h3>(*Engine) SetPCMPart(id pcmcore.PartID, voice pcmcore.VoiceID, volume, pan float64) error</h3><span class="badge">PCMパート設定</span>
+<p>PCM発音パート（'A'〜'P'）に音色・音量・パンを設定します。</p></div>
+
+<div class="method"><h3>(*Engine) SetMasterVolume(volume float64) / SetMasterVolumeSmooth(target, rampSeconds float64)</h3><span class="badge">音量</span>
+<p>エンジン全体のマスターボリューム（0.0-1.0）を即時または滑らかに設定します。<code>player</code>
+パッケージの音量APIはこれらのラッパーです。</p></div>
+
+<div class="method"><h3>(*Engine) SetReverb(enabled bool, kind string, timeSeconds, level float64) / SetPartReverbSend(id PartID, send float64)</h3><span class="badge">リバーブ</span>
+<p>マスターリバーブの有効化・種類（<code>"simple"</code>=Schroeder型 / <code>"normal"</code>=FDN型）
+・リバーブタイム・レベルを設定し、パート単位のセンドレベルを設定します。</p></div>
+
+<div class="method"><h3>(*Engine) Close() error</h3><span class="badge">終了処理</span>
+<p>音声出力デバイスを閉じます（<code>NewEngine</code>で開いた場合）。</p></div>
+
+<p class="note">上記はアプリケーションから直接呼ぶことを想定した主要メソッドの抜粋です。
+<code>Schedule*</code>系メソッド（<code>ScheduleNoteOn</code>等、サンプル単位で発音タイミングを予約
+する低レベルAPI）は主に<code>player</code>パッケージの内部実装が使用するものですが、独自シーケンサ
+を組む場合にも利用できます。詳細はソースコードのコメントを参照してください。</p>
+
+</main>
+</div>
+<footer>
+<hr>
+<p>
+© 2026 <a href="https://megaak.com">MEGAAK SOFT</a> —
+本ドキュメントは <a href="https://creativecommons.org/licenses/by/4.0/deed.ja" target="_blank" rel="noopener">CC BY 4.0</a> の下でライセンスされています。
+</p>
+</footer>
+</body>
+</html>

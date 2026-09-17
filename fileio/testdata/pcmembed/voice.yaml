@@ -1,0 +1,22 @@
+pcmVoice:
+  # fileName is a full path from the embed.FS root
+  # ("testdata/pcmembed/sounds/kick.wav"), not relative to this YAML
+  # file's own directory.
+  - voiceID: 20
+    voiceType: oneShot
+    loop: false
+    voiceSetting:
+      - fileName: testdata/pcmembed/sounds/kick.wav
+        note: C1
+        volume: 100
+        pan: 0
+  # fileName is a bare file name (no "/"), so it resolves relative to this
+  # YAML file's own directory within the embed.FS.
+  - voiceID: 21
+    voiceType: oneShot
+    loop: false
+    voiceSetting:
+      - fileName: kick.wav
+        note: C1
+        volume: 100
+        pan: 0

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>License - go-fmml</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d2129; --border:#2a2f3a;
+    --text:#e7e9ee; --muted:#9aa3b2; --accent:#7aa2ff; --accent2:#ffb454;
+    --code-bg:#11141b; --table-head:#1d2129;
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{line-height:1.8; font-size:15.5px;}
+  .layout{display:flex; max-width:1180px; margin:0 auto;}
+  nav.side{width:220px; flex:0 0 220px; padding:28px 16px; position:sticky; top:0; align-self:flex-start; height:100vh; overflow-y:auto; border-right:1px solid var(--border);}
+  nav.side h1{font-size:17px; margin:0 0 4px;}
+  nav.side .sub{font-size:11.5px; color:var(--muted); margin-bottom:20px;}
+  nav.side a{display:block; color:var(--muted); text-decoration:none; padding:7px 10px; border-radius:6px; font-size:13.5px;}
+  nav.side a:hover{background:var(--panel2); color:var(--text);}
+  nav.side a.current{background:var(--panel2); color:var(--accent); font-weight:600;}
+  main{flex:1; padding:36px 44px 80px; min-width:0;}
+  h1{font-size:28px; margin:0 0 6px;}
+  h2{font-size:20px; margin:44px 0 12px; padding-bottom:8px; border-bottom:1px solid var(--border);}
+  h3{font-size:15px; margin:0; font-family:Consolas,"SF Mono",Menlo,monospace; color:var(--accent2);}
+  p{color:var(--text);}
+  .lead{color:var(--muted); font-size:16px;}
+  code{background:var(--code-bg); border:1px solid var(--border); border-radius:4px; padding:1px 6px; font-size:0.92em; font-family: Consolas, "SF Mono", Menlo, monospace;}
+  pre{background:var(--code-bg); border:1px solid var(--border); border-radius:8px; padding:14px 16px; overflow-x:auto; font-size:12.8px; line-height:1.6; margin:10px 0 0;}
+  pre code{background:none; border:none; padding:0;}
+  table{border-collapse:collapse; width:100%; margin:14px 0 22px; font-size:13.8px;}
+  th,td{border:1px solid var(--border); padding:8px 12px; text-align:left; vertical-align:top;}
+  th{background:var(--table-head); color:var(--accent); font-weight:600;}
+  .card-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px; margin:18px 0 8px;}
+  .card{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 18px;}
+  .card b{color:var(--accent);}
+  .card p{margin:6px 0 0; color:var(--muted); font-size:13.5px;}
+  .method{background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:16px 20px; margin:14px 0;}
+  .note{background:var(--panel2); border-left:3px solid var(--accent2); padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  .warn{background:var(--panel2); border-left:3px solid #ff6b6b; padding:10px 16px; border-radius:0 6px 6px 0; margin:14px 0; font-size:13.8px; color:var(--muted);}
+  a{color:var(--accent);}
+  footer{max-width:1180px; margin:0 auto; padding:0 44px 60px 264px;}
+  footer hr{border:none; border-top:1px solid var(--border); margin:40px 0 18px;}
+  footer p{color:var(--muted); font-size:12.5px;}
+  @media (max-width:860px){
+    .layout{flex-direction:column;}
+    nav.side{position:relative; width:auto; height:auto; border-right:none; border-bottom:1px solid var(--border);}
+    main{padding:24px;} footer{padding:0 24px 40px;}
+  }
+  .langswitch{position:fixed; top:16px; right:24px; z-index:50; display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:4px; font-size:12px; box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+  .langswitch a, .langswitch span{padding:4px 12px; border-radius:16px; text-decoration:none; color:var(--muted); font-weight:500;}
+  .langswitch a:hover{background:var(--panel2); color:var(--text);}
+  .langswitch span.current{background:var(--accent); color:#0f1115; font-weight:700;}
+</style>
+</head>
+<body>
+<div class="langswitch"><a href="../license.html">日本語</a><span class="current">English</span></div>
+<div class="layout">
+<nav class="side">
+  <h1><img src="../img/go-fmml_icon.jpg" alt="go-fmml" style="height:28px;width:28px;object-fit:cover;border-radius:6px;vertical-align:middle;margin-right:8px;">go-fmml</h1>
+  <div class="sub">FM/PCM Sound Driver Docs</div>
+  <a href="index.html">Overview &amp; Getting Started</a>
+  <a href="api.html">Public API Reference</a>
+  <a href="fmvoice.html">FM Voice Parameters</a>
+  <a href="pcmvoice.html">PCM Voice Parameters</a>
+  <a href="mmlformat.html">MML File Structure</a>
+  <a href="mmlcommands.html">MML Command Reference</a>
+  <a href="smftool.html">SMF Conversion Tool</a>
+  <a class="current" href="license.html">License</a>
+</nav>
+<main>
+
+<h1>License</h1>
+<p class="lead">go-fmml uses a <b>dual-license</b> setup: the <b>source code</b> and the
+<b>documentation</b> are licensed separately. Please check which one applies to what you're
+using.</p>
+
+<table>
+<tr><th>Scope</th><th>License</th><th>File</th></tr>
+<tr><td>Source code (all Go source outside <code>docs/</code>, and any file carrying the MIT header)</td><td>MIT License</td><td><code>LICENSE</code></td></tr>
+<tr><td>Documentation (this page, the HTML under <code>docs/</code>, <code>README.md</code>, <code>CLAUDE.md</code>)</td><td>CC BY 4.0</td><td><code>LICENSE-DOCS</code></td></tr>
+</table>
+
+<h2>Source Code License: MIT License</h2>
+<p>
+go-fmml's source code is provided under the <b>MIT License</b>. The only condition is to retain the
+copyright notice and the license text; beyond that, it can be used almost without restriction:
+</p>
+<div class="card-grid">
+  <div class="card"><b>Commercial use</b><p>Free to use in commercial products (e.g. a paid game).
+  No royalties required.</p></div>
+  <div class="card"><b>Embedding</b><p>Can be embedded as-is as a library into your own game or
+  tool.</p></div>
+  <div class="card"><b>Modification</b><p>The source code can be freely modified and customized.</p></div>
+  <div class="card"><b>Redistribution</b><p>Both source and binary redistribution are allowed,
+  modified or not.</p></div>
+  <div class="card"><b>Keep it closed</b><p>There is no obligation to publish modified source code
+  (this is not a copyleft license).</p></div>
+  <div class="card"><b>No warranty</b><p>Provided "as is"; the copyright holder is not liable for any
+  damages arising from the software.</p></div>
+</div>
+<p>
+The only condition is including the <b>copyright notice and the license text</b>
+(<code>LICENSE</code>) with anything you distribute - e.g. in your game's credits screen or a
+README, wherever is reasonable for your users to find it.
+</p>
+<p>
+See the bundled <a href="../LICENSE">LICENSE</a> file for the full license text (English original,
+Japanese reference translation).
+</p>
+
+<h2>Avoiding GPL Contamination in AI-Assisted Implementation</h2>
+<p>
+go-fmml was implemented using <a href="https://www.anthropic.com/claude-code" target="_blank" rel="noopener">Claude
+Code</a> in a Spec-Driven Development workflow. AI-generated code carries a generally recognized risk
+of "license contamination" - copyleft (e.g. GPL) code patterns leaking in unintentionally from the
+model's training data.
+</p>
+<p>
+To mitigate this IP risk, go-fmml's specification document (<code>CLAUDE.md</code>) lays out the
+following coding rules, and the AI is required to self-check its output against them on every code
+generation pass.
+</p>
+<div class="card-grid">
+  <div class="card"><b>No direct copying</b><p>Never output verbatim code, comments, or distinctive
+  documentation structures that appear to originate from a public repository.</p></div>
+  <div class="card"><b>Avoid GPL-specific patterns</b><p>Do not replicate overly specific logic
+  patterns, variable names, or coding idioms unique to GPL-licensed projects.</p></div>
+  <div class="card"><b>Alternative implementations</b><p>Achieve equivalent functionality using
+  standard language idioms, patterns common across MIT/Apache-style OSS, or algorithms designed from
+  scratch.</p></div>
+  <div class="card"><b>Cleanroom approach</b><p>When implementing a well-known algorithm or protocol,
+  focus purely on functional equivalence while building the structure, naming, and implementation
+  details independently.</p></div>
+</div>
+<div class="warn">
+This is a process-level precaution, not a legal guarantee of non-similarity to any specific OSS
+project. It reduces licensing risk in AI-assisted coding, but does not eliminate it entirely.
+</div>
+
+<h2>Third-Party Library License Notices</h2>
+<p>
+go-fmml depends on the following OSS libraries internally (including indirect dependencies).
+Copyright in each library belongs to its own authors, and each library's own license terms apply
+independently of go-fmml's MIT license.
+</p>
+<table>
+<tr><th>Library</th><th>Purpose</th><th>License</th></tr>
+<tr><td><code>github.com/ebitengine/oto/v3</code></td><td>Cross-platform audio output</td><td>Apache License 2.0</td></tr>
+<tr><td><code>github.com/ebitengine/purego</code> (indirect)</td><td>cgo-free OS API calls used by oto/v3</td><td>Apache License 2.0</td></tr>
+<tr><td><code>gopkg.in/yaml.v3</code></td><td>YAML parsing for FM/PCM voice parameter files</td><td>MIT License / Apache License 2.0 (dual-licensed)</td></tr>
+</table>
+
+<h2>Documentation License: CC BY 4.0</h2>
+<div class="note">
+<b>This page (and the rest of the docs) is NOT covered by the MIT license above</b><br>
+This page, along with <code>CLAUDE.md</code>, <code>README.md</code>, and all HTML documents under
+<code>docs/</code>, is provided under a <b>separate</b> license from the source-code MIT license:
+<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">Creative
+Commons Attribution 4.0 International (CC BY 4.0)</a>.
+</div>
+<p>
+Under CC BY 4.0, you may freely copy, redistribute, and adapt (remix, transform, build upon) this
+documentation, including for commercial purposes, provided you give appropriate credit to the author
+(MEGAAK SOFT) and indicate if changes were made. You may not apply additional legal or technical
+restrictions that would prevent others from doing anything the license permits.
+</p>
+<p>
+See <a href="../LICENSE-DOCS">LICENSE-DOCS</a> for the full license text.
+</p>
+
+</main>
+</div>
+<footer>
+<hr>
+<p>
+© 2026 <a href="https://megaak.com">MEGAAK SOFT</a> —
+This document is licensed under <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,74 @@
+go-fmml — Documentation License (CC BY 4.0)
+============================================
+
+このリポジトリのドキュメント（`CLAUDE.md`、`README.md`、`docs/` 配下のHTMLファイル等、仕様設計
+および執筆に著者の時間が費やされたテキスト・HTMLドキュメント一式）は、以下の
+Creative Commons Attribution 4.0 International (CC BY 4.0) ライセンスの下で提供されます。
+
+（本ライセンスはドキュメントのみを対象とし、Goソースコードは対象外です。ソースコードは
+`LICENSE` ファイルに記載のMITライセンスが適用されます。）
+
+
+日本語（公式日本語訳）
+----------------------
+
+このコンテンツは、クリエイティブ・コモンズ 表示 4.0 国際 (CC BY 4.0) ライセンスの下に提供されて
+います。
+
+あなたは以下の条件に従う限り、自由に：
+
+  共有 — どのような媒体・形式においても、資料を複製し、再配布できます
+  翻案 — 資料をリミックス、変換し、それを基に構築できます
+
+これは、営利目的を含め、あらゆる用途で可能です。
+
+　条件：
+
+  表示 — あなたは適切なクレジットを表示し、ライセンスへのリンクを提供し、変更があったらその旨を
+  示さなければなりません。あなたは、合理的な方法でこれを行うことができますが、ライセンサーがあな
+  たやあなたの利用行為を支持していると示唆するような方法は除きます。
+
+  追加的な制約の禁止 — あなたは、本ライセンスが許諾する行為を法的に制限するようないかなる法的手
+  段または技術的手段も適用してはなりません。
+
+著作権者：MEGAAK SOFT (https://megaak.com) (© 2026)
+
+ライセンス全文（日本語）：
+https://creativecommons.org/licenses/by/4.0/deed.ja
+条文（日本語）：
+https://creativecommons.org/licenses/by/4.0/legalcode.ja
+
+（本セクションは Creative Commons が公開する公式日本語訳に基づく要約です。解釈に相違がある場合
+は、Creative Commons が公開する正式な条文（英語版）が優先します。）
+
+
+English (Official)
+----------------------
+
+This work is licensed under a Creative Commons Attribution 4.0 International
+License (CC BY 4.0).
+
+You are free to:
+
+  Share — copy and redistribute the material in any medium or format
+  Adapt — remix, transform, and build upon the material
+
+for any purpose, even commercially.
+
+Under the following terms:
+
+  Attribution — You must give appropriate credit, provide a link to the
+  license, and indicate if changes were made. You may do so in any reasonable
+  manner, but not in any way that suggests the licensor endorses you or your
+  use.
+
+  No additional restrictions — You may not apply legal terms or technological
+  measures that legally restrict others from doing anything the license
+  permits.
+
+Copyright holder: MEGAAK SOFT (https://megaak.com) (© 2026)
+
+Full license deed:
+https://creativecommons.org/licenses/by/4.0/
+Legal code:
+https://creativecommons.org/licenses/by/4.0/legalcode
